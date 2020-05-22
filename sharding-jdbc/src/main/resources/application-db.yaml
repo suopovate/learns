@@ -1,0 +1,28 @@
+spring:
+  shardingsphere:
+    datasource:
+      sharding-0:
+        password: 123321qaz..
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://47.107.56.246:3306/sharding-0?characterEncoding=utf-8
+        username: root
+      sharding-1:
+        password: 123321qaz..
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://47.107.56.246:3306/sharding-1?characterEncoding=utf-8
+        username: root
+      names: sharding-0,sharding-1
+    sharding:
+      tables:
+        customer:
+          table-strategy:
+            inline:
+              sharding-column: id
+              algorithm-expression: customer_$->{id % 2}
+          database-strategy:
+            inline:
+              sharding-column: birthday
+              algorithm-expression: sharding-$->{birthday % 2}
+          actual-data-nodes: sharding-$->{0..1}.customer_$->{0..1}
