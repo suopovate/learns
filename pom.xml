@@ -22,7 +22,33 @@
         <module>tomcat_embed</module>
         <module>leetcode</module>
         <module>datastructor</module>
+        <module>desingerModel</module>
+        <module>distribute-lock</module>
+        <module>concurency</module>
+        <module>springboot-es</module>
+        <module>dynamic-proxy</module>
+        <module>all-in</module>
+        <module>reactor</module>
     </modules>
 
-
+    <dependencies>
+        <!--java对象布局查看工具-->
+        <!--ClassLayout.parseInstance(object).toPrintable()-->
+        <dependency>
+            <groupId>org.openjdk.jol</groupId>
+            <artifactId>jol-core</artifactId>
+            <version>0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.5.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.16</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>

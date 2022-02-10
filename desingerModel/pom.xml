@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mynio</artifactId>
+    <artifactId>desingerModel</artifactId>
 
     <dependencies>
         <dependency>
@@ -17,11 +17,5 @@
             <artifactId>hutool-all</artifactId>
             <version>5.2.1</version>
         </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.45.Final</version>
-        </dependency>
     </dependencies>
-
 </project>

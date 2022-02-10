@@ -1,4 +1,4 @@
-package cn.vt.nio;
+package cn.vt.io;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * @author vate
  */
-public class MyNIOServer {
+public class MyIOServer {
 
     private ServerSocket serverSocket;
 

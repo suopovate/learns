@@ -1,12 +1,36 @@
 package vt.leetcode.str;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*z
  *
  * @author vate
  */
-public class PalindromeAlgorithm {
+public class BackTracingPalindromeAlgorithm {
+
     public static void main(String[] args) {
-        System.out.println(isPalindrome("."));
+        List<List<String>> ret = new ArrayList<>();
+        dfs("abb", 0, new ArrayList<>(), ret);
+        System.out.println(ret);
+    }
+
+    public static void dfs(String s, int start, ArrayList<String> path, List<List<String>> ret) {
+        if (start == s.length()) {
+            ret.add(new ArrayList(path));
+            return;
+        }
+        for (int i = start; i < s.length(); i++) {
+            String left = s.substring(start, i + 1);
+            if (isPalindrome(left)) { // 如果左串为回文，则继续递归查找右串的所有子串
+                path.add(left);
+                dfs(s, i + 1, path, ret);
+                // 在下层 dfs 中的结果在最底层已经保存，所以在这里需要清空下层的结果，换一条其他路径
+                path.remove(path.size() - 1);
+            } else {
+                continue;
+            }
+        }
     }
 
     public static boolean isPalindrome(String s) {
@@ -25,7 +49,8 @@ public class PalindromeAlgorithm {
             if (isAlphaOrNumber(headC)) {
                 if (isAlphaOrNumber(tailC)) {
                     validCount += head == tail ? 1 : 2;
-                    head++;tail--;
+                    head++;
+                    tail--;
                     if (headC != tailC) {
                         return false;
                     }
