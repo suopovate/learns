@@ -1,9 +1,5 @@
 package vt.leetcode.str;
 
-import com.sun.scenario.effect.Merge;
-
-import java.io.Console;
-
 /**
  * @author vate
  */

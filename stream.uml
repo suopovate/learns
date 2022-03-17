@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>java.util.stream</OriginalElement>
+  <nodes>
+    <node x="199.0" y="390.0">java.util.stream.ForEachOps</node>
+    <node x="389.0" y="390.0">java.util.stream.DistinctOps</node>
+    <node x="260.0" y="0.0">java.util.stream.PipelineHelper</node>
+    <node x="0.0" y="540.0">java.util.stream.SliceOps</node>
+    <node x="256.0" y="235.0">java.util.stream.TerminalOp</node>
+    <node x="327.0" y="540.0">java.util.stream.FindOps</node>
+    <node x="184.0" y="465.0">java.util.stream.SortedOps</node>
+    <node x="0.0" y="80.0">java.util.stream.Stream</node>
+    <node x="0.0" y="315.0">java.util.stream.TerminalSink</node>
+    <node x="164.0" y="540.0">java.util.stream.Tripwire</node>
+    <node x="0.0" y="465.0">java.util.stream.ReduceOps</node>
+    <node x="41.0" y="160.0">java.util.stream.ReferencePipeline</node>
+    <node x="163.0" y="80.0">java.util.stream.AbstractPipeline</node>
+    <node x="43.0" y="0.0">java.util.stream.BaseStream</node>
+    <node x="363.0" y="465.0">java.util.stream.MatchOps</node>
+    <node x="45.0" y="235.0">java.util.stream.Sink</node>
+    <node x="0.0" y="390.0">java.util.stream.StreamShape</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="java.util.stream.ReferencePipeline" target="java.util.stream.AbstractPipeline" relationship="GENERALIZATION">
+      <point x="78.0" y="-15.0" />
+      <point x="275.0" y="135.0" />
+      <point x="322.5" y="135.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="java.util.stream.ReferencePipeline" target="java.util.stream.Stream" relationship="REALIZATION">
+      <point x="-78.0" y="-15.0" />
+      <point x="119.0" y="135.0" />
+      <point x="71.5" y="135.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="java.util.stream.TerminalSink" target="java.util.stream.Sink" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="java.util.stream.AbstractPipeline" target="java.util.stream.BaseStream" relationship="REALIZATION">
+      <point x="-79.75" y="-15.0" />
+      <point x="242.75" y="55.0" />
+      <point x="190.75" y="55.0" />
+      <point x="49.25" y="15.0" />
+    </edge>
+    <edge source="java.util.stream.Stream" target="java.util.stream.BaseStream" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-15.0" />
+      <point x="71.5" y="55.0" />
+      <point x="92.25" y="55.0" />
+      <point x="-49.25" y="15.0" />
+    </edge>
+    <edge source="java.util.stream.AbstractPipeline" target="java.util.stream.PipelineHelper" relationship="GENERALIZATION">
+      <point x="79.75" y="-15.0" />
+      <point x="402.25" y="55.0" />
+      <point x="381.5" y="55.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.8786644951140065" showDependencies="false" x="411.7618164967563" y="370.91751621872106" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
