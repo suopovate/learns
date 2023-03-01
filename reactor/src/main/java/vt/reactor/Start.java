@@ -15,6 +15,8 @@ public class Start {
         vtPublisher.publish("123");
         vtPublisher.publish("123");
         vtPublisher.publish("123");
+        vtPublisher.publish("123");
+        vtPublisher.publish("123");
         ThreadUtil.sleep(100);
 
 //        Flux.just("").map(s -> )

@@ -1,10 +1,13 @@
 package vt.leetcode.str;
 
-public class ListNode {
-    int val;
-    ListNode next;
+import java.util.Objects;
 
-    ListNode(int x) {
+public class ListNode {
+    public int val;
+    public ListNode next;
+
+    public ListNode(int x) {
         val = x;
     }
+
 }

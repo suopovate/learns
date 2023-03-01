@@ -1,0 +1,86 @@
+### 方法一：双指针法
+
+- 反转链表比较简单，很容易想到，从前向后遍历链表，然后把每个结点的 next 指向前一个结点就好。
+- 具体实现中，首先需要两个指针，一个 curr 指针在遍历到每个结点进行操作，一个 prew 指针指向 curr 的前一个结点。其次，由于 curr->next 指向 prew，导致原来的 curr 的下一个结点失去引用，所以还需要一个指针 temp 用来保存后一个结点。
+
+### 代码
+
+* c
+
+```c
+//双指针法
+struct ListNode* reverseList(struct ListNode* head){
+    struct ListNode* curr = head;
+    struct ListNode* prew = NULL;
+    while (curr) {
+        //保存下一个结点
+        struct ListNode* temp = curr->next;
+        //反转结点
+        curr->next = prew;
+        //更新 curr 和 prew 指针
+        prew = curr;
+        curr = temp;
+    }
+    return prew;
+}
+```
+
+### 方法二：递归法
+
+- 递归法和双指针法是一样的逻辑，同样是当 curr 为空的时候循环结束，不断将 curr 指向 prew 的过程。具体可以对比双指针法和下面的代码，代码已经详细注释，理解起来应该相当容易。
+
+### 代码
+
+从前向后反转指针指向
+
+* c
+
+```c
+//递归法（从前向后反转指针指向）
+struct ListNode* reverse(struct ListNode* curr, struct ListNode* prew) {
+    if (!curr) {
+        return prew;
+    }
+    
+    struct ListNode* temp = curr->next;
+    curr->next = prew;
+    //可以与双指针法对比，其实逻辑是一样的，只是用递归实现而已
+    //下面的代码省去了双指针中更新 curr 和 prew 的过程，直接在递归中引用
+    return reverse(temp, curr);
+}
+
+struct ListNode* reverseList(struct ListNode* head){
+    //这里也是省去了初始化 curr 和 prew 的过程，直接在递归中引用
+    //下面正文中的代码和注释中的代码是等价的
+    //struct ListNode* curr = head;
+    //struct ListNode* prew = NULL;
+    //return reverse(curr, prew);
+    return reverse(head, NULL);
+}
+```
+
+- 这时候聪明的同学就会说了，上面的双指针法和递归法实质上都是从前往后反转指针指向，那么能不能从后往前反转指针指向呢？
+- 答案是当然能了，具体代码如下，已经详细注释。
+
+* c
+
+```c
+//递归法（从后向前反转指针指向）
+struct ListNode* reverseList(struct ListNode* head){
+    //递归结束条件判断
+    if (!head || !head->next) {
+        return head;
+    }
+
+    //调用递归，反转第二个结点后的结点
+    struct ListNode* newHead = reverseList(head->next);
+    //反转头结点与第二个结点
+    head->next->next = head;
+    //此时 head 是尾结点，尾结点需要指向 NULL
+    head->next = NULL;
+
+    return newHead;
+}
+```
+
+写题解不易，若对你有帮助，点赞评论再走吧。(～￣▽￣)～
