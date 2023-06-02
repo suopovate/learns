@@ -1,0 +1,149 @@
+[更多算法动画图解，长按此链接跳转AppStore](https://apps.apple.com/app/apple-store/id1624248084?pt=961833&ct=leetcode&mt=8)
+
+[算法动画：排序数组1（冒泡+选中+插入+快排+归并）](https://leetcode.cn/problems/sort-an-array/solution/suan-fa-dong-hua-by-linsen80586-loxr/)
+[算法动画：排序数组2（希尔+计数+基数+堆）](https://leetcode.cn/problems/sort-an-array/solution/suan-fa-dong-hua-pai-xu-shu-zu-mou-pao-x-d5dd/)
+
+# 冒泡排序
+
+![冒泡.MP4](https://leetcode.cn/problems/sort-an-array/solution/suan-fa-dong-hua-by-linsen80586-loxr/c40d8cc0-dcdc-4bc7-8254-f846f2c04b5b)
+
+* 
+
+```
+func sort(_ a:inout Array<Int>){
+    let n = a.count
+    for i in 0..<n-1 {
+        var isSorted = true
+        for j in 0..<n-1-i {
+            if a[j] > a[j+1] {
+                a.swapAt(j, j+1)
+                isSorted = false
+            }
+        }
+        if isSorted {
+            break
+        }
+    }
+}
+```
+
+# 选择排序
+
+![选择.MP4](https://leetcode.cn/problems/sort-an-array/solution/suan-fa-dong-hua-by-linsen80586-loxr/c7781624-40a1-44ad-a6c5-3b1fefc1f038)
+
+* 
+
+```
+func sort(_ a:inout Array<Int>){
+    print(a)
+    print("begin")
+    let n = a.count
+    for i in 0..<n-1 {
+        print(" i=\(i)")
+        var iMin = i
+        for j in i+1..<n {
+            if a[iMin] > a[j] {
+                iMin = j
+            }
+        }
+        a.swapAt(i, iMin)
+        print(a)
+    }
+    print("end")
+    print(a)
+}
+```
+
+# 插入排序
+
+![插入.MP4](https://leetcode.cn/problems/sort-an-array/solution/suan-fa-dong-hua-by-linsen80586-loxr/19b0e8ab-25be-42fe-99f3-123771ccec07)
+
+* 
+
+```
+func sort(_ a:inout Array<Int>){
+    print(a)
+    print("begin")
+    let n = a.count
+    for i in 1..<n {
+        print(" i=\(i)")
+        let value = a[i]
+        var hole = i
+        while hole > 0 && a[hole-1] > value {
+            a[hole] = a[hole-1]
+            hole -= 1
+        }
+        a[hole] = value
+        print(a)
+    }
+    print("end")
+    print(a)
+}
+```
+
+# 快速排序
+
+![快排1.MP4](https://leetcode.cn/problems/sort-an-array/solution/suan-fa-dong-hua-by-linsen80586-loxr/022e7cd7-08bd-4c0b-84a4-bd20a4741be1)
+
+* 
+
+```
+func sort(_ a:inout Array<Int>, start: Int, end: Int){
+    if start < end {
+        let partitionIndex = partition(&a, start: start, end: end)
+        sort(&a, start: start, end: partitionIndex-1 )
+        sort(&a, start: partitionIndex+1, end: end )
+    }
+}
+
+func partition(_ a:inout Array<Int>, start: Int, end: Int) -> Int {
+    let pivot = a[end]
+    var partitionIndex = start
+    for i in start..<end {
+        if a[i] <= pivot {
+            a.swapAt(i, partitionIndex)
+            partitionIndex += 1
+        }
+    }
+    a.swapAt(partitionIndex, end)
+    return partitionIndex
+}
+```
+
+# 归并排序
+
+![归并.MP4](https://leetcode.cn/problems/sort-an-array/solution/suan-fa-dong-hua-by-linsen80586-loxr/f8169b84-3509-49e2-ae9d-643875d8834d)
+
+* 
+
+```
+func sort(a: [Int]) -> [Int] {
+    let n = a.count
+    if n == 1 {
+        return a
+    }
+    var left = Array(a[0..<n/2])
+    var right = Array(a[n/2..<n])
+    left = sort(a: left)
+    right = sort(a: right)
+    let m = merge(left: left, right: right)
+    return m
+}
+
+func merge(left: [Int], right: [Int]) -> [Int] {
+    var mergedList = [Int]()
+    var l = left
+    var r = right
+    while l.count > 0 && r.count > 0 {
+        if l.first! < r.first! {
+            mergedList.append(l.first!)
+            l.removeFirst()
+        } else {
+            mergedList.append(r.first!)
+            r.removeFirst()
+        }
+    }
+    return mergedList + l + r
+}
+```
+

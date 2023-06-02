@@ -1,0 +1,115 @@
+用队列的方法
+
+![image.png](https://pic.leetcode.cn/1677112679-ispUfB-image.png)
+
+* 
+
+```
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    ListNode front;
+    ListNode rear;
+    
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null) {
+            return null;
+        }
+        ListNode first = head;
+        ListNode second = head;
+        int size = size(head);
+        int key = size - k % size;
+        for (int i = key; i > 0; i--) {
+            first = first.next;
+        }
+        while (first != null) {
+            offer(first.val);
+            first = first.next;
+        }
+        for (int i = key; i > 0; i--) {
+            offer(second.val);
+            second = second.next;
+        }
+        return front;
+    }
+
+    public void offer(int x) {
+        ListNode p = new ListNode(x);
+        if (rear == null) {
+            front = p;
+            rear = p;
+        } else {
+            rear.next = p;
+            rear = p;
+        }
+    }
+
+    public int size(ListNode head) {
+        int len = 0;
+        while (head != null) {
+            len++;
+            head = head.next;
+        }
+        return len;
+    }
+}
+```
+
+环
+
+![image.png](https://pic.leetcode.cn/1677116713-HLLXdm-image.png)
+
+* 
+
+```
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if(head == null) {
+            return head;
+        }
+        int size = size(head);
+        int key = size - k % size;
+        ListNode tail = get(head, size);
+        ListNode p = get(head, key);
+        tail.next = head;
+        head = p.next;
+        p.next = null;
+        return head;
+    }
+
+    public ListNode get(ListNode head, int n) {
+        for(int i = 1; i < n; i++) {
+            head = head.next;
+        }
+        return head;
+    }
+
+    public int size(ListNode head) {
+        int cnt = 0;
+        while(head != null) {
+            head = head.next;
+            cnt++;
+        }
+        return cnt;
+    }
+}
+```
+

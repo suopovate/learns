@@ -1,0 +1,39 @@
+[详细刷题视频合集](https://xiaochen1024.com/series/6196129fc1553b002e57bef5/6196208ec1553b002e57bef6)      
+[刷题笔记](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18)
+
+* 
+
+```
+var getHint = function(secret, guess) {
+    // 标记secret中被匹配过的项
+    const position = new Array(secret.length).fill(false)
+    // 标记A类匹配的项，避免重复匹配
+    const positionA = new Array(secret.length).fill(false)
+    let A = 0
+    let B = 0
+    for(let i = 0; i < guess.length; i++) {
+        if (guess[i] == secret[i] && !position[i]) {
+            A++
+            position[i] = true
+            positionA[i] = true
+        }
+    }
+    for(let i = 0; i < guess.length; i++) {
+        if (positionA[i]) continue
+        let index = secret.indexOf(guess[i])
+        // 可能会有多个相同的值，所以要循环找到未做标记的
+        while (index != -1) {
+            if (!position[index]) {
+                B++
+                position[index] = true
+                break
+            } else {
+                index = secret.indexOf(guess[i], index + 1)
+            }
+        }
+    }
+    return `${A}A${B}B`
+};
+
+```
+

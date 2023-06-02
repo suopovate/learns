@@ -1,0 +1,39 @@
+解题思路：
+正序遍历数组nums2，对于当前考察的元素nums[i]来说：
+如果栈不为空且其值大于栈顶元素，由于是正序遍历所以当前考察的元素nums[i]是栈顶元素的下一个更大元素。所以，栈顶元素出栈作为key，nums[i]作为value。随后，将nums[i]入栈，看后面考察的元素会不会有大于nums[i]的。
+如果栈为空，则将nums[i]入栈，看后面考察的元素会不会有大于nums[i]的。
+最后，当数组nums2中所有元素都遍历完时，如果栈不为空，说明栈中的元素没有找到下一个更大的元素，原因在于我们是正序遍历数组，如果有其下一个更大的元素，在上面的判断中已经将其出栈了。所以对于栈中的元素来说，不存在下一个更大的元素，根据题意其对应的value为-1。
+
+* 
+
+```
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        // 单调栈，栈顶元素大于栈底元素
+        Stack<Integer> stack = new Stack<Integer>();
+        // 结果集
+        int[] res = new int[nums1.length];
+        // Map中的key存储需要查找的元素值，value存储下一个更大元素
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        // 遍历nums2
+        for (int i = 0 ; i < nums2.length ; i++) {
+            // 栈不为空且当前元素大于栈顶元素
+            // 说明当前元素是栈顶元素的下一个更大元素
+            // while循环表示当前元素是栈中所有已存元素的下一个更大元素
+            while (!stack.isEmpty() && nums2[i] > stack.peek()) {
+                map.put(stack.pop(), nums2[i]);
+            }
+            // 当前元素入栈
+            stack.push(nums2[i]);
+        }     
+        for (int i = 0 ; i < nums1.length ; i++) {
+            res[i] = map.getOrDefault(nums1[i], -1);
+        }
+        return res;
+    }
+}
+```
+
+**复杂度分析：**
+时间复杂度：O(m+n)
+空间复杂度：O(n)

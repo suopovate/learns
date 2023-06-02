@@ -1,0 +1,41 @@
+* 
+
+```
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        //定义返回的结果链表,和一个临时链表
+        ListNode result = new ListNode(-1);
+        ListNode temp = result;
+
+        //while循环，比较两链表各节点的大小，将小的赋值给temp的下一个结点
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                temp.next = list1;
+                list1 = list1.next;
+                temp = temp.next;
+                continue;
+            } else {
+                temp.next = list2;
+                list2 = list2.next;
+                temp = temp.next;
+                continue;
+            }
+        }
+        //最后有且只有一个链表不为null，直接将此链表的初始结点赋值到temp的下一个结点
+        temp.next = list1 == null ? list2 : list1;
+
+        return result.next;
+    }
+}
+```
+

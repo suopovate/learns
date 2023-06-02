@@ -1,0 +1,60 @@
+> Problem: [566. 重塑矩阵](https://leetcode.cn/problems/reshape-the-matrix/description/)
+
+[TOC]
+
+# 思路：
+
+可以设置一个索引`index`,记录从原矩阵取的第几个数，这个数是可以映射到原矩阵的位置，从而可以取出原矩阵对应位置的数字：
+$\left\{\begin{array}{l}\mathrm{r}=\text { index } / \mathrm{n} \\\mathrm{c}=\text { index } \% \mathrm{n}\end{array}\right.$
+
+# Code
+
+* []
+
+```Java
+class Solution {
+    public int[][] matrixReshape(int[][] mat, int r, int c) {
+        int m = mat.length, n = mat[0].length;
+        if(m * n != r * c) return mat;
+        int[][] ans = new int[r][c];
+        int index = 0;
+        for(int i = 0; i < r; i++){
+            for(int j = 0; j < c; j++){
+                ans[i][j] = mat[index / n][index % n];
+                index++;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+* []
+
+```C++
+class Solution {
+public:
+    vector<vector<int>> matrixReshape(vector<vector<int>>& mat, int r, int c) {
+        int m = mat.size(), n = mat[0].size();
+        if(m * n != r * c) return mat;
+        vector<vector<int>> ans(r, vector<int>(c));
+        int index = 0;
+        for(int i = 0; i < r; i++){
+            for(int j = 0; j < c; j++){
+                ans[i][j] = mat[index / n][index % n];
+                index++;
+            }
+        }
+        return ans;
+    }
+};
+```
+
+# 复杂度分析：
+
+- **时间复杂度**：$O(rc)$，里的时间复杂度是在重塑矩阵成功的前提下的时间复杂度。
+- **空间复杂度**：$O(1)$，这里的空间复杂度不包含返回的重塑矩阵需要的空间。
+
+> 放弃一件事很容易，每天能坚持一件事一定很酷，一起每日一题吧！
+
+**关注我 [leetCode专栏](http://t.csdn.cn/kQLJO)，每日更新！**

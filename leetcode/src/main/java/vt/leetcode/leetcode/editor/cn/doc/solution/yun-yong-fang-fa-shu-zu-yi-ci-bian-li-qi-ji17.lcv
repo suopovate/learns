@@ -1,0 +1,61 @@
+![image.png](https://pic.leetcode.cn/1678275739-UTMTKg-image.png)
+
+# 解题思路
+
+首先设置一个n*n的一个二维数组，之后定义两个方向的方法数组来进行控制遍历的顺序，在每一个相应的数组数字位置上填入相应的数字（**该数字运用一个变量来进行控制，在本题我用的是count**），其中最需要注意的是边界条件的判定，一旦超过数组即数组越界就要立马对数组进行控制。
+
+# 代码实现
+
+* 
+
+```
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> ans(n, vector<int>(n, 0));
+        int num = pow(n ,2), count = 1;
+        int dx[] = {0, 1, 0, -1}, dy[] = {1, 0, -1, 0}, col = n, row = n;
+        int x = 0, y = 0, mark  = 0;
+        for (int i = 0; i < num; ++i) {
+            ans[x][y] = count;
+            int a = x + dx[mark], b = y + dy[mark];;
+            if (a < 0 || b < 0 || a >= row || b >= col || ans[a][b] != 0) {
+                mark = (mark + 1) % 4;
+                a = x + dx[mark], b = y + dy[mark];
+            }
+            ++count;
+            x = a, y = b;
+        }
+        return ans;
+    }
+};
+```
+
+# 修改版
+
+**时隔数日之后再看该题，写出了更为简单的代码（增加了visited数组记录被访问的元素位置），思路和上个代码差不多，代码如下：（修改于2023/4/6）**
+
+* 
+
+```
+class Solution {
+public:
+    int dir[4][2] = {0, 1, 1, 0, 0, -1, -1, 0};
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> ans(n, vector<int>(n)), visited(n, vector<int>(n));
+        int x = 0, y = 0, mark = 0;
+        for (int i = 1; i <= n * n; ++i) {
+            ans[x][y] = i;
+            visited[x][y] = INT_MAX;
+            int a = x + dir[mark][0], b = y + dir[mark][1];
+            if (a < 0 || a >= n || b < 0 || b >= n || visited[a][b] == INT_MAX) {
+                mark = (mark + 1) % 4;
+                a = x + dir[mark][0], b = y + dir[mark][1];
+            }
+            x = a, y = b;
+        }
+        return ans;
+    }
+};
+```
+

@@ -1,0 +1,61 @@
+> Problem: [61. 旋转链表](https://leetcode.cn/problems/rotate-list/description/)
+
+[TOC]
+
+# 思路
+
+> 遍历链表至List列表(size为n)，从索引(n-k)处开始截取至末尾，然后把末尾节点next指向head，最后返回(n-k)节点，即为新链表首节点。
+
+# 解题方法
+
+# 复杂度
+
+- 时间复杂度:
+
+> $O(n)
+
+- 空间复杂度:
+
+> $O(n)
+
+# Code
+
+* []
+
+```Java
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null || k <= 0) {
+            return head;
+        }
+        List<ListNode> arr = new ArrayList<>();
+        ListNode ln = head;
+        while (ln != null) {
+            arr.add(ln);
+            ln = ln.next;
+        }
+        int len = arr.size();
+        k = k % len;
+        if (len <= 1 || k <= 0) {
+            return head;
+        }
+        ListNode last = arr.get(len - k - 1);
+        ListNode start = arr.get(len - k);
+        last.next = null;
+        arr.get(len - 1).next = arr.get(0);
+        return start;
+    }
+}
+```
+

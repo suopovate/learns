@@ -1,0 +1,33 @@
+### 解题思路
+
+先把数组全部的元素反转了,再反转0-(k%nums.length-1),最后把后面的(k%nums.length)-length-1的元素反转了
+例：[1,2,3,4,5,6,7] k=3;
+全部反转的结果:[7,6,5,4,3,2,1]
+反转0-(3%7-1)的结果:[5,6,7,4,3,2,1]
+反转(3%7)-length-1的结果:[5,6,7,1,2,3,4]
+
+### 代码
+
+* java
+
+```java
+class Solution {
+     public void rotate(int[] nums, int k) {
+        int length=nums.length;
+        k%=length;
+        reversal(nums,0,length-1);
+        reversal(nums,0,k-1);
+        reversal(nums,k,length-1);
+    }
+    public void reversal(int[] nums,int i,int j){
+        while(i<j){
+        int temp=nums[i];
+        nums[i]=nums[j];
+        nums[j]=temp;
+        i++;
+        j--;
+        }
+    }
+}
+```
+

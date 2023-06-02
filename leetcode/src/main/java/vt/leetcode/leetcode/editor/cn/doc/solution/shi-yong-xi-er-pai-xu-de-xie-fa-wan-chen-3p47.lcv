@@ -1,0 +1,45 @@
+> Problem: [912. 排序数组](https://leetcode.cn/problems/sort-an-array/description/)
+
+[TOC]
+
+# 思路
+
+> 讲述看到这一题的思路
+
+# 解题方法
+
+> 直接插入排序会超时，只是记录一下这种写法
+
+# 复杂度
+
+- 时间复杂度:
+
+> 添加时间复杂度, 示例： $O(n)$
+
+- 空间复杂度:
+
+> 添加空间复杂度, 示例： $O(n)$
+
+# Code
+
+* []
+
+```Java
+
+class Solution {
+    public int[] sortArray(int[] nums) {
+        // 直接插入排序
+        // gap = 1的希尔排序
+        for (int i = 0; i < nums.length; i ++) {
+            int temp = nums[i];
+            int j = i;
+            for ( ; j >= 1 && temp < nums[j-1]; j -= 1) {
+                nums[j] = nums[j-1];
+            }
+            nums[j] = temp;
+        }
+        return nums;
+    }
+}
+```
+

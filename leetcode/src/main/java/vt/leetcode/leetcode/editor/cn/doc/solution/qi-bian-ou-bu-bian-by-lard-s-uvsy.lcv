@@ -1,0 +1,54 @@
+# 思路
+
+根据题意，我们只需要将扫描到的**索引为奇数**的结点不断插入到正确位置。
+
+比如
+1->2->3->4->5 **==》** 1->3->2->4->5 **==》** 1->3->5->2->4
+
+在扫描过程中需要维护四个变量：
+1. `lastOdd` 表示**已经到正确位置的最后一个奇数**，在上方例子中 `lastOdd` 一开始是1，然后变为3，然后变为5。
+2. `firstEven` 记录**原始链表**中第二个结点，因为在不断的插入过程中，`head.next` 值会改变。
+3. `lastEven` 表示**当前排列好的最后一个偶数**，在上方例子中，`lastEven` 一开始是2，然后变为4。
+4. `traversal` 为遍历结点，负责遍历整个链表。
+
+# 代码
+
+* []
+
+```java
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+
+        if(head == null){
+            return null;
+        }
+        if(head.next == null){
+            return head;
+        }
+
+        ListNode lastOdd = head;
+        ListNode firstEven = head.next;
+        ListNode lastEven = head.next;
+        ListNode traversal = head.next.next;
+
+        for(int i = 3; traversal != null; traversal = traversal.next, i++){
+            if(i % 2 == 1){
+                ListNode temp = lastEven;
+                lastEven.next = traversal.next;
+                traversal.next = firstEven;
+                lastOdd.next = traversal;
+
+                // update lastOdd
+                lastOdd = lastOdd.next;
+                traversal = temp;
+            }else{
+                // update lastEven
+                lastEven = traversal;
+            }
+        }
+
+        return head;
+    }
+}
+```
+

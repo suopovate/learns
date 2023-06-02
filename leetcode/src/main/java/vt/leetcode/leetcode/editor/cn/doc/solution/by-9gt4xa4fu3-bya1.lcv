@@ -1,0 +1,73 @@
+> Problem: [61. 旋转链表](https://leetcode.cn/problems/rotate-list/description/)
+
+![image.png](https://pic.leetcode.cn/1667979682-WIvZCl-image.png)
+
+# Code
+
+* []
+
+```C++
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+ListNode* process(ListNode* head){//向前移动一位
+    ListNode* last= head;
+    ListNode* pre=head;
+    while(pre->next->next!=nullptr){
+        pre=pre->next;
+    }
+    last=pre->next;
+    last->next=head;
+    pre->next=nullptr;
+    head=last;
+    return head;
+}
+
+ListNode* process2(ListNode* head){//向后移动一位
+    ListNode* last=head;
+    ListNode* pre= head;
+    while(last->next!=nullptr){
+        last=last->next;
+    }
+    last->next=pre;
+    head=pre->next;
+    pre->next=nullptr;  
+    return head;
+}
+    ListNode* rotateRight(ListNode* head, int k) {
+    if(head==nullptr||head->next==nullptr){
+        return head;
+    }
+    ListNode* node = head;
+    int num=1;
+    while(node->next!=nullptr){
+    node=node->next;
+    num++;//记录链表长度
+    }
+    k = k%num;//取模，减少移动次数
+    if(k<=num/2){//判断操作次数选择向前移动还是向后移动
+        for(int i=0;i<k;i++){
+            head = process(head);
+        }
+    }
+    else{
+        for(int i=0;i<num-k;i++){
+            head = process2(head);
+        }
+    }
+    return head;
+        }
+    };
+    ```
+```
+

@@ -1,0 +1,30 @@
+### 解题思路
+
+利用哈希表，如果遇到重复的字符，就把这个字符在哈希表中的value变为-1，否则存储index，最后遍历哈希表，输出第一个不为-1的index，否则返回-1,。
+
+### 代码
+
+* cpp
+
+```cpp
+class Solution {
+public:
+    int firstUniqChar(string s) {
+        unordered_map<char,int> hash_table;
+        int n = s.size();
+        for(int i=n-1;i>=0;i--)
+        {
+            char temp = s[i];
+            if(hash_table.count(temp)) hash_table[temp] = -1;
+            else hash_table[temp] = i;
+        }
+        int m = hash_table.size();
+        for(auto x:hash_table)
+        {
+            if(x.second != -1) return x.second;
+        }
+        return -1;
+    }
+};
+```
+

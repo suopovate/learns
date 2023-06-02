@@ -1,17 +1,17 @@
 package vt.leetcode.str;
 //给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
 //
-// 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。 
+// 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
 //
-// 您可以假设除了数字 0 之外，这两个数都不会以 0 开头。 
+// 您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
 //
-// 示例： 
+// 示例：
 //
 // 输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)
 //输出：7 -> 0 -> 8
 //原因：342 + 465 = 807
-// 
-// Related Topics 链表 数学 
+//
+// Related Topics 链表 数学
 // 👍 4834 👎 0
 
 
@@ -25,7 +25,7 @@ package vt.leetcode.str;
  * ListNode(int x) { val = x; }
  * }
  */
-class AddTwoNumberList {
+class AddTwoNumberListOld {
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode cl1 = l1;
@@ -98,7 +98,7 @@ class AddTwoNumberList {
         ListNode l2 = new ListNode(9);
         l2.next = new ListNode(9);
 
-        ListNode rl = new AddTwoNumberList().addTwoNumbers(l1, l2);
+        ListNode rl = new AddTwoNumberListOld().addTwoNumbers(l1, l2);
         ListNode crl = rl;
 
         while (crl != null) {

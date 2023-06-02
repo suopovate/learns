@@ -1,0 +1,33 @@
+### 解题思路
+
+数组的映射：
+1、先判断给出的参数是否合理，即元素个数是否相等
+2、映射：
+映射行：元素位数 / 数组列数
+映射列：元素位数 % 数组列数
+
+### 代码
+
+* java
+
+```java
+class Solution {
+    public int[][] matrixReshape(int[][] mat, int r, int c) {
+        //给定参数不合理
+        if(r * c != mat.length * mat[0].length){
+            return mat;
+        }
+        //参数合理
+        int[][] arr = new int[r][c];
+        int n = mat[0].length;//原数组的列数
+        //将二维数组映射到一维数组中
+        //映射行：元素位数 / 数组列数
+        //映射列：元素位数 % 数组列数
+        for (int i = 0; i < r * c; i++) {
+            arr[i / c][i % c] = mat[i / n][i % n];
+        }
+        return arr;
+    }
+}
+```
+

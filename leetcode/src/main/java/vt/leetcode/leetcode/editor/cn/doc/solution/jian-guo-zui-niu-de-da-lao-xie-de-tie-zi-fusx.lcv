@@ -1,0 +1,32 @@
+### 解题思路
+
+三种情况为true：
+第一种情况：全为小写字母
+第二种情况：全为大写
+第三种情况：一个大写，且首字母大写
+可以定义一个变量res，用来统计大写字母的数量，用变量index来跟踪第三种情况，判断此时index是否为0
+
+### 代码
+
+* c
+
+```c
+bool detectCapitalUse(char * word){
+    int len = strlen(word);
+    int res = 0;
+    int index = -1;
+    if(len == 1)
+        return true;
+    else{
+        for(int i = 0; i < len; i++){
+            if(isupper(word[i])){
+                res++;
+                index = i;
+            }
+        }
+    }
+    return res == len || res == 0 || (res == 1 && index == 0);
+}
+```
+
+![图片.png](https://pic.leetcode.cn/1680009324-kPzdEy-%E5%9B%BE%E7%89%87.png)

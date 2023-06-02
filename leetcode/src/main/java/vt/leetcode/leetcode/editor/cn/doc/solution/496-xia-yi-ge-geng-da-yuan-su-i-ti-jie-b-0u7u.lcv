@@ -1,0 +1,129 @@
+### 方法一，暴力法
+
+**解题思路**
+
+根据题意，可以发现 $\textit{nums}_1$ 是一个查询数组，逐个查询 $\textit{nums}_2$ 中元素右边的第一个更大的值。因此，可以暴力地逐个计算 $\textit{nums}_1$ 中的每个元素值 $\textit{nums}_1[i]$ 在 $\textit{nums}_2$ 中对应位置的右边的第一个比 $\textit{nums}_1[i]$ 大的元素值。具体地，用如下方法：
+
+- 初始化与 $\textit{nums}_1$ 等长的查询数组 $\textit{ans}$。
+
+- 遍历 $\textit{nums}_1$ 中的所有元素，不妨设当前遍历到元素为 $\textit{nums}_1[i]$：
+
+  - 从前向后遍历 $\textit{nums}_2$ 中的元素，直至找到 $\textit{nums}_2[j] = \textit{nums}_1[i]$；
+
+  - 从 $j+1$ 开始继续向后遍历，直至找到 $\textit{nums}_2[k] > \textit{nums}_2[j]$，其中 $k \ge j+1$；
+
+  - 如果找到了 $\textit{nums}_2[k]$，则将 $\textit{ans}[i]$ 置为 $\textit{nums}_2[k]$，否则将 $\textit{ans}[i]$ 置为 $-1$。
+- 查询数组 $\textit{ans}$ 即为最终结果。
+
+[参考](https://leetcode.cn/problems/next-greater-element-i/solution/xia-yi-ge-geng-da-yuan-su-i-by-leetcode-bfcoj/)
+
+### 代码
+
+* []
+
+```Java
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        int m = nums1.length, n = nums2.length;
+        int[] ans = new int[m];
+        for (int i = 0; i < m; ++i) {
+            int j = 0;
+            while (j < n && nums1[i] != nums2[j]) {
+                j++;
+            }
+            int k = j + 1;
+            while (k < n && nums2[j] > nums2[k]) {
+                k++;
+            }
+            ans[i] = k < n ? nums2[k] : -1;
+        }
+        return ans;
+    }
+}
+```
+
+**复杂度分析**
+
+- 时间复杂度：$O(mn)$，其中 $m$ 是 $\textit{nums}_1$ 的长度，$n$ 是 $\textit{nums}_2$ 的长度。
+
+- 空间复杂度：$O(1)$。
+
+### 方法二，单调栈 + 哈希表
+
+**解题思路**
+
+可以先预处理 $\textit{nums}_2$，使查询 $\textit{nums}_1$ 中的每个元素在 $\textit{nums}_2$ 中对应位置的右边的第一个更大的元素值时不需要再遍历 $\textit{nums}_2$。于是，可以将题目分解为两个子问题：
+
+- 第 $1$ 个子问题：如何更高效地计算 $\textit{nums}_2$ 中每个元素右边的第一个更大的值；
+
+- 第 $2$ 个子问题：如何存储第 $1$ 个子问题的结果。
+
+**算法**
+
+可以用单调栈来解决第 $1$ 个子问题。倒序遍历 $\textit{nums}_2$，并用单调栈中维护当前位置右边的更大的元素列表，从栈底到栈顶的元素是单调递减的。
+
+具体地，每次移动到数组中一个新的位置 $i$，就将当前单调栈中所有小于 $\textit{nums}_2[i]$ 的元素弹出单调栈，当前位置右边的第一个更大的元素即为弹栈后的栈顶元素，如果栈为空则说明当前位置右边没有更大的元素。随后将位置 $i$ 的元素入栈。
+
+因为题目规定了 $\textit{nums}_2$ 是没有重复元素的，所以可以用哈希表来解决第 $2$ 个子问题，将元素值与其右边第一个更大的元素值的对应关系存入哈希表。
+
+**细节**
+
+因为在这道题中只需要用到 $\textit{nums}_2$ 中元素的顺序而不需要用到下标，所以栈中直接存储 $\textit{nums}_2$ 中元素的值即可。
+
+[参考](https://leetcode.cn/problems/next-greater-element-i/solution/xia-yi-ge-geng-da-yuan-su-i-by-leetcode-bfcoj/)
+
+### 代码
+
+* []
+
+```Java
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        Map<Integer, Integer> map = new HashMap<>();
+        Deque<Integer> stack = new LinkedList<>();
+        for (int i = nums2.length - 1; i >= 0; --i) {
+            while (!stack.isEmpty() && nums2[i] >= stack.peek()) {
+                stack.pop();
+            }
+            map.put(nums2[i], stack.isEmpty() ? -1 : stack.peek());
+            stack.push(nums2[i]);
+        }
+        int[] ans = new int[nums1.length];
+        for (int i = 0; i < nums1.length; ++i) {
+            ans[i] = map.get(nums1[i]);
+        }
+        return ans;
+    }
+}
+```
+
+* []
+
+```Java
+// 参考 1019 链表中的下一个更大节点 
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        Map<Integer, Integer> map = new HashMap<>();
+        Deque<int[]> stack = new LinkedList<>();
+        for (int i = 0; i < nums2.length; ++i) {
+            while (!stack.isEmpty() && stack.peek()[0] < nums2[i]) {
+                int j = stack.pop()[1];
+                map.put(nums2[j], nums2[i]);
+            }
+            stack.push(new int[]{nums2[i], i});
+        }
+        int[] ans = new int[nums1.length];
+        for (int i = 0; i < nums1.length; ++i) {
+            ans[i] = map.getOrDefault(nums1[i], -1);
+        }
+        return ans;
+    }
+}
+```
+
+**复杂度分析**
+
+- 时间复杂度：$O(m + n)$，其中 $m$ 是 $\textit{nums}_1$ 的长度，$n$ 是 $\textit{nums}_2$ 的长度。需要遍历 $\textit{nums}_2$ 以计算 $\textit{nums}_2$ 中每个元素右边的第一个更大的值；需要遍历 $\textit{nums}_1$ 以生成查询结果。
+
+- 空间复杂度：$O(n)$，用于存储哈希表。
+

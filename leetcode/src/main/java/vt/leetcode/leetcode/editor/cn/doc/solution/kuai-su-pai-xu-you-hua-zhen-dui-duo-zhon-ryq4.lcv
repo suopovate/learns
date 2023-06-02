@@ -1,0 +1,152 @@
+基础快排代码直接写出！啪的一下很快哦😄
+- 基本思路：快速排序每一次都排定一个元素（这个元素呆在了它最终应该呆的位置），然后递归地去排它左边的部分和右边的部分，依次进行下去，直到数组有序。
+  代码如下
+
+* 
+
+```
+class Solution {
+
+    private static final Random random = new Random();
+
+    public int[] sortArray(int[] nums) {
+        quickSort(nums, 0, nums.length - 1);
+        return nums;
+    }
+
+    private void quickSort(int[] nums, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+        int partitionIndex = getPartitionIndex(nums, left, right);
+        quickSort(nums, left, partitionIndex - 1);
+        quickSort(nums, partitionIndex + 1, right);
+    }
+
+    private int getPartitionIndex(int[] nums, int left, int right) {
+        int pivot = left;
+        int index = pivot + 1;
+        for (int i = index; i <= right; i++) {
+            if (nums[i] < nums[pivot]) {
+                swap(nums, i, index);
+                index++;
+            }
+        }
+        swap(nums, pivot, index - 1);
+        return index - 1;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+但这个方法是过不了的，因为力扣那个5万个2的用例，所以需要优化。
+方法如下：
+- 随机取得pivot
+
+* 
+
+```
+//随机选取法
+int RandomIndex = left + random.nextInt(right - left + 1);
+swap(nums, left, RandomIndex);
+```
+
+- 三指针，把等于pivot元素的所有元素放在分割区间的中间，很多元素相等的情况下，递归区间大大减少。
+
+* 
+
+```
+int pivot = nums[left];
+int less = left;
+int more = right + 1;
+// 循环不变量：这里是左闭右闭区间
+// 小于nums[pivot]区间：[left + 1, less]
+// 等于nums[pivot]区间：[less + 1, i]
+// 大于nums[pivot]区间：[more, right]
+int i = left + 1;
+while (i < more) {
+    if (nums[i] < pivot) {
+        less++;
+        swap(nums, i, less);
+        i++;
+    } else if (nums[i] == pivot) {
+        i++;
+    } else {
+        //这里不i++很重要！因为我们无法确定从尾部换来的元素是否小于nums[pivot]
+        more--;
+        swap(nums, i, more);
+    }
+}
+//less最后指向的一定是小于nums[pivot]的元素
+swap(nums, left, less);
+//同理more指向大于nums[pivot]的元素
+quickSort(nums, left, less - 1);
+quickSort(nums, more, right);
+```
+
+完整代码如下：
+
+* 
+
+```
+class Solution {
+
+    private static final Random random = new Random();
+
+    public int[] sortArray(int[] nums) {
+        quickSort(nums, 0, nums.length - 1);
+        return nums;
+    }
+
+    private void quickSort(int[] nums, int left, int right) {
+        //递归退出条件
+        if (left >= right) {
+            return;
+        }
+        //随机选取法
+        int RandomIndex = left + random.nextInt(right - left + 1);
+        swap(nums, left, RandomIndex);
+
+        int pivot = nums[left];
+        int less = left;
+        int more = right + 1;
+        // 循环不变量：这里是左闭右闭区间
+        // 小于nums[pivot]区间：[left + 1, less]
+        // 等于nums[pivot]区间：[less + 1, i]
+        // 大于nums[pivot]区间：[more, right]
+        int i = left + 1;
+        while (i < more) {
+            if (nums[i] < pivot) {
+                less++;
+                swap(nums, i, less);
+                i++;
+            } else if (nums[i] == pivot) {
+                i++;
+            } else {
+                //这里不i++很重要！因为我们无法确定从尾部换来的元素是否小于nums[pivot]
+                more--;
+                swap(nums, i, more);
+            }
+        }
+        //less最后指向的一定是小于nums[pivot]的元素
+        swap(nums, left, less);
+        //同理more指向大于nums[pivot]的元素
+        quickSort(nums, left, less - 1);
+        quickSort(nums, more, right);
+    }
+
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+如果对循环边界不熟悉可以画画图，那就很好理解。

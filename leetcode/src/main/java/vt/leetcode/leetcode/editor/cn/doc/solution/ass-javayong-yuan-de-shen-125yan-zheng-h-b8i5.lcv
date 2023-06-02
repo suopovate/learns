@@ -1,0 +1,47 @@
+不会真的有人笔试能想起来【Character】这种东西吧，
+人类的本质是复读机，算法的本质就是造轮子。
+直接写简单判断和转换的小方法就可以解决这个问题。
+
+* []
+
+```java
+class Solution {
+    public boolean isPalindrome(String s) {
+        int l = 0;
+        int r = s.length()-1;
+        while(l <= r){
+            while (l < r && !isLetterOrDigit(s.charAt(l))) {
+                ++l;
+            }
+            while (l < r && !isLetterOrDigit(s.charAt(r))) {
+                --r;
+            }
+            if (AToa(s.charAt(l)) != AToa(s.charAt(r))) {
+                return false;
+            }
+            ++l;
+            --r;
+        }
+        return true;
+    }
+    public boolean isLetterOrDigit(char temp){
+        if(temp >= '0' && temp <= '9'){
+            return true;
+        }else if(temp >= 'a' && temp <= 'z') {
+            return true;
+        }else if(temp >= 'A' && temp <= 'Z'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public char AToa(char temp ){
+        if(temp >= 'A' && temp <= 'Z'){
+            return (char)(temp + 32);
+        }else{
+            return temp;
+        }
+    }
+}
+```
+

@@ -1,0 +1,50 @@
+### 解题思路
+
+测试用例更新后增加了例如 5 万个 2 这种极端测试用例，这种特殊用例使得基本的快排算法时间复杂度下降到 O(n^2)。但只需要在原有的代码上需要做一些小的修改就可以应付这种极端用例：
+
+1. 随机选取“支点”来对付基本有序的用例
+2. 频繁交换支点来对付基本一致的用例
+
+以双指针扫描为例，原来选取第一个值作为支点，现在改为随机选取支点的值。原来扫描时，为了减少交换次数，只对严格大于（或小于）的数据才进行交换，现在改为大于等于（或小于等于）即交换，这样就能保证当数据基本相同时，左右扫描交替进行，将支点最终停留在靠近数组中间的位置。
+
+具体的改动，在代码中注释出来了。
+
+### 代码
+
+* golang
+
+```golang
+import "math/rand"
+
+func sortArray(nums []int) []int {
+  quick(&nums, 0, len(nums) - 1)
+  return nums
+}
+
+func quick(arr *([]int), i, j int) {
+  if i >= j {return}
+  mid := partition(arr, i, j)
+  quick(arr, i, mid - 1)
+  quick(arr, mid + 1, j)
+}
+
+func partition(arr *([]int), i int, j int) int {
+  p := rand.Intn(j - i + 1) + i  // 随机选取“支点”
+  nums := *arr
+  nums[i], nums[p]  = nums[p], nums[i]
+  for i < j {
+    for nums[i] < nums[j] && i < j { j-- }  // 修改原来的 nums[j] >= nums[i]，增加交换频率
+    if (i < j) {
+      nums[i], nums[j] = nums[j], nums[i]
+      i++
+    }
+    for nums[i] < nums[j] && i < j { i++ }  // 修改原来的 nums[j] >= nums[i]，增加交换频率
+    if i < j {
+      nums[i], nums[j] = nums[j], nums[i]
+      j--
+    }
+  }
+  return i
+}
+```
+

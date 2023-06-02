@@ -1,0 +1,58 @@
+> 大家好，我是小爱，一个热爱算法并不断努力的女孩子！[关注我](https://www.cnblogs.com/BNDSBilly/p/15195405.html)，和我一起交流算法心得呀！
+
+---
+
+### 题目分析：
+
+题目只有唯一的操作：使 `n - 1` 个元素增加 `1`，这个操作实际上可以等价于使`1`个元素减少`1`。而只要保证数组中最小的元素不要再减小，对其他的元素使用这个操作，最终所有元素都减至最小值就可以结束了。
+
+我们只需要进行两次遍历，第一次遍历找出最小值，第二次遍历求每个元素与最小值的差值，也就是操作次数，最后对操作次数求和就是我们的答案了。
+
+---
+
+### 代码：
+
+* c++
+
+```c++
+class Solution {
+public:
+    int minMoves(vector<int>& nums) {
+        int minnum = 1e9, ans = 0;
+        for (int i = 0; i < nums.size(); i ++) {
+            minnum = min(minnum, nums[i]);
+        }
+        for (int i = 0; i < nums.size(); i ++) {
+            ans += nums[i] - minnum;
+        }
+        return ans;
+    }
+};
+```
+
+---
+
+### 复杂度分析：
+
+- 时间复杂度：$O(n)$。
+- 空间复杂度：$O(1)$。
+
+---
+
+# 推荐阅读
+
+小爱每周持续推出原创 C++、算法类文章，欢迎大家提出宝贵意见呀！
+![image.png](https://pic.leetcode-cn.com/1634540935-dOlVUu-image.png)
+
+# [算法的时间复杂度](https://mp.weixin.qq.com/s?__biz=MzkyMzI3ODgzNQ==&mid=2247483846&idx=1&sn=c50df1aa45b3a532eda436031d75af74&chksm=c1e6cd5af691444cca53022dc2ae7b9818d14d6c55030faf2c451da36a35aaa7a5797c6ebf5e&token=394652438&lang=zh_CN#rd)
+
+# [C++ 类 字符串](https://mp.weixin.qq.com/s?__biz=MzkyMzI3ODgzNQ==&mid=2247483827&idx=1&sn=eae09972d727ccaa47569bff957cc634&chksm=c1e6cd2ff69144392b2789a2e38a125aac8e75c4ff4b1ab7f032eab4be01920fe21bf110eea9&token=1377938079&lang=zh_CN#rd)
+
+# [C++ 类 第二部分](https://mp.weixin.qq.com/s?__biz=MzkyMzI3ODgzNQ==&mid=2247483814&idx=1&sn=547b85c54c0e3b7cb0ddc1f5e0ebc859&chksm=c1e6cd3af691442cc8a3d93c4205645c56abd4950ebe4a11b59cf8408a00022a9b3adb09093d&token=398550145&lang=zh_CN#rd)
+
+# [C++ 类 第一部分](https://mp.weixin.qq.com/s?__biz=MzkyMzI3ODgzNQ==&mid=2247483775&idx=1&sn=e899eaeec7d20098de254ba78dac8294&chksm=c1e6cde3f69144f5350eddc6809142144fb083e1fb6d772d5e30a3a2626e9871f0bcb96d9a3e&token=1582044052&lang=zh_CN#rd)
+
+# [C++ 基础语法](https://mp.weixin.qq.com/s?__biz=MzkyMzI3ODgzNQ==&mid=2247483757&idx=1&sn=a2584273d295cdaae16d9b7df296f4c0&chksm=c1e6cdf1f69144e7051725d5ac5feb4a7a4b221290b726e506ef307b31d73a7930e278c09e61#rd)
+
+# [树状数组](https://mp.weixin.qq.com/s?__biz=MzkyMzI3ODgzNQ==&mid=2247483674&idx=1&sn=263595b26950ac60e5bf789839d70c9e&chksm=c1e6cd86f691449062d780b96d9af6d9590a71872ebfee980d5b045b9963714043261027c16b#rd)
+
