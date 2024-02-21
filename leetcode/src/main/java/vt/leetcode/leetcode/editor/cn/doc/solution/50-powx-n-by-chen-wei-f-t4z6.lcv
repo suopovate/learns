@@ -1,0 +1,255 @@
+#### 递归三要素
+
+- 递归函数以及参数
+- 递归终止条件
+- 递归单层搜索逻辑
+
+**递归伪代码模版**：
+
+* js
+
+```js
+function recursion(level, param1, param2, ...) {
+  //递归终止条件
+  if (level > MAX_LEVEL) {
+    // output result
+    return;
+  }
+
+  //处理当前层
+  process_data(level, data, ...);
+
+  //进入下一层
+  recursion(level + 1, p1, ...);
+
+  //重置状态
+  reverse_state(level);
+}
+```
+
+#### 什么是分治：
+
+分治会将大问题拆解成小问题，拆解到最小问题之后，开始不断合并结果，递归是分治实现的一种形式或者是分治实现的一部分，分治包括三分部分，分解、计算、合并。分治的场景很多，例如快速排序，归并排序。
+
+![ds_49](https://pic.leetcode-cn.com/1637715821-VewwVn-20211118151917.png)
+
+分治伪代码模版：
+
+* js
+
+```js
+function divide_conquer(problem, param1, param2, ...){
+  if(problem === null){
+    // return result
+  }
+
+  //分割问题
+  subproblem = split_problem(problem, data)
+
+  //计算子问题
+  subResult1 = divide_conquer(subproblem[0], p1, ...)
+  subResult2 = divide_conquer(subproblem[1], p1, ...)
+  subResult3 = divide_conquer(subproblem[2], p1, ...)
+  ...
+
+  result = process_resule(subResult1, subResult2, subResult3,...)
+}
+```
+
+#### 举例
+
+**计算n!**  `n! = 1 * 2 * 3... * n`
+
+* js
+
+```js
+function factorial(n) {
+  if (n <= 1) return 1;
+  return n * factorial(n - 1);
+}
+
+factorial(6);
+6 * factorial(5);
+6 * 5 * factorial(4);
+//...
+6 * 5 * 4 * 3 * 2 * factorial(1);
+6 * 5 * 4 * 3 * 2 * 1;
+6 * 5 * 4 * 3 * 2;
+//...
+6 * 120;
+720;
+```
+
+**斐波那契数列**，`F(n)=F(n-1)+F(n+2)`
+
+* js
+
+```js
+function fib(n) {
+  if (n === 0 || n === 1) {
+    return n;
+  }
+  return fib(n - 1) + fib(n - 2);
+}
+```
+
+#### [50. Pow(x, n)](https://leetcode-cn.com/problems/powx-n/) (medium)
+
+##### 方法1：分治
+
+![ds_66](https://pic.leetcode-cn.com/1637715821-INpPvj-20211118151918.png)
+
+- 思路：当n是偶数的时候，对n进行分治，拆解为`x*x`的`n/2`的次方，当n为奇数的时候拆分成`x * myPow(x,n-1)`,注意当n是负数或者是0的特殊情况
+- 复杂度分析：时间复杂度：`O(logn)`， n是进行二进制拆分的时间复杂度。空间复杂度：`O(logn)`, n为递归深度
+
+js：
+
+* js
+
+```js
+var myPow = function (x, n) {
+    if (n === 0) return 1 // n=0直接返回1
+    if (n < 0) {   				//n<0时 x的n次方等于1除以x的-n次方分
+        return 1 / myPow(x, -n)
+    }
+    if (n % 2) {    //n是奇数时 x的n次方 = x*x的n-1次方
+        return x * myPow(x, n - 1)
+    }
+    return myPow(x * x, n / 2) //n是偶数，使用分治，一分为二，等于x*x的n/2次方 
+}
+```
+
+Java：
+
+* java
+
+```java
+class Solution {
+    public double myPow(double x, int n) {
+        long N = n;
+        return N >= 0 ? pow(x, N) : 1.0 / pow(x, -N);
+    }
+
+    public double  pow(double  x, long y) {
+        if (y == 0) {
+            return 1.0;
+        }
+        double ret = pow(x, y / 2);
+        return y % 2 == 0 ? ret * ret : ret * ret * x;
+    }
+}
+```
+
+##### 方法2：二进制
+
+![ds_50](https://pic.leetcode-cn.com/1637715821-IalABd-20211118151919.gif)
+
+- 思路：对n的二进制不断右移动，判断n的二进制最后一位是否是1， 如果是1则将结果乘以x。
+- 复杂度分析：时间复杂度`O(logn)`： n为对 n 进行二进制拆分的时间复杂度，空间复杂度`O(1)`
+
+js:
+
+* js
+
+```js
+var myPow = function (x, n) {
+    if (n < 0) {
+        x = 1 / x;
+        n = -n;
+    }
+    let result = 1;
+    while (n) {
+        if (n & 1) result *= x;  //判断n的二进制最后一位是否是1， 如果是1则将结果乘以x
+        x *= x;
+        n >>>= 1;
+        //进行无符号右移1位，此处不能使用有符号右移（>>）
+        //当n为-2^31转换成正数时的二进制位“10000000000000000000000000000000” , 
+      	//如果采用有符号右移时会取最左侧的数当符号即（1），所以返回的结果是 -1073741824
+        /*
+          C++ 中只有一种右移运算符——>>。它的定义如下：移出的低位舍弃；
+          如果是无符号数，高位补0；如果是有符号数，高位补符号位。
+          而JavaScript中有两种右移运算符——>>和>>>。其中>>是有符号右移，
+          即高位补符号位（可能会出现负数变正数，正数变负数的异常情况）；>>>是无符号右移，高位无脑补0。
+        */
+    }
+    return result;
+}
+
+```
+
+Java:
+
+* java
+
+```java
+class Solution {
+    public double myPow(double x, int n) {
+        if(x == 0.0f) return 0.0d;
+        long b = n;
+        double result = 1.0;
+        if(b < 0) {
+            x = 1 / x;
+            b = -b;
+        }
+        while(b > 0) {
+            if((b & 1) == 1) result *= x;
+            x *= x;
+            b >>= 1;
+        }
+        return result;
+    }
+}
+
+```
+
+#### 视频教程（高效学习）:[点击学习](https://xiaochen1024.com/series/6196129fc1553b002e57bef5/6196208ec1553b002e57bef6)
+
+#### 目录：
+
+[1.开篇介绍](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18)
+
+[2.时间空间复杂度](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/619635dcc1553b002e57bf12)
+
+[3.动态规划](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/61963bcdc1553b002e57bf13)
+
+[4.贪心](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/61963ce5c1553b002e57bf14)
+
+[5.二分查找](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/61963e36c1553b002e57bf15)
+
+[6.深度优先&广度优先](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/61964050c1553b002e57bf16)
+
+[7.双指针](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/619640cec1553b002e57bf17)
+
+[8.滑动窗口](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/61964164c1553b002e57bf18)
+
+[9.位运算](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196420ac1553b002e57bf19)
+
+[10.递归&分治](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/61964285c1553b002e57bf1a)
+
+[11剪枝&回溯](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/61964326c1553b002e57bf1b)
+
+[12.堆](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/619643e1c1553b002e57bf1c)
+
+[13.单调栈](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196ce3ac1553b002e57bf1f)
+
+[14.排序算法](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196ced6c1553b002e57bf20)
+
+[15.链表](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196cf7fc1553b002e57bf21)
+
+[16.set&map](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196cfc6c1553b002e57bf22)
+
+[17.栈](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196d002c1553b002e57bf23)
+
+[18.队列](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196d065c1553b002e57bf24)
+
+[19.数组](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196d0f9c1553b002e57bf25)
+
+[20.字符串](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196d19cc1553b002e57bf26)
+
+[21.树](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196d279c1553b002e57bf27)
+
+[22.字典树](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196d2c4c1553b002e57bf28)
+
+[23.并查集](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196d34dc1553b002e57bf29)
+
+[24.其他类型题](https://xiaochen1024.com/courseware/60b4f11ab1aa91002eb53b18/6196d3adc1553b002e57bf2a)

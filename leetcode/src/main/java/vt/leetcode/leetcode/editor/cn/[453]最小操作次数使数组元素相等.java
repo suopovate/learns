@@ -6,6 +6,7 @@ class MinimumMovesToEqualArrayElements {
     public static void main(String[] args) {
         Solution solution = new MinimumMovesToEqualArrayElements().new Solution();
     }
+ 
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {

@@ -1,0 +1,25 @@
+### 解题思路
+
+双指针办法，在字符串t中寻找字符串s中的字符，如果字符相等则寻找下一个，i == n时找完，即s是t的字串
+
+### 代码
+
+* java
+
+```java
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+        int i = 0, j = 0;
+        while(i < n && j < m){
+            if(s.charAt(i) == t.charAt(j)){
+                i++;
+            }
+            j++;
+        }
+        return i == n;
+    }
+}
+```
+

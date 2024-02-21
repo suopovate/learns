@@ -1,0 +1,93 @@
+方法一：
+
+思路：
+- 求最长公众子序列
+- 判断s与t的最长公共子序列的长度是否等于s的长度
+
+代码：
+
+* 
+
+```
+public boolean isSubsequence(String s, String t) {
+       if (s.length() > t.length()) return false;
+       if (s.length() == 0 || s.equals("")) return true;
+       if (t.length() == 0 || t.equals("")) return false;
+       int[][] dp = new int[t.length()][s.length()];
+       for (int i = 0; i < s.length(); i++) {
+           if (s.charAt(i) == t.charAt(0)) {
+               for (int x = i; x < s.length(); x++) {
+                   dp[0][x] = 1;
+               }
+               break;
+           }
+       }
+       for (int j = 0; j < t.length(); j++) {
+           if (t.charAt(j) == s.charAt(0)) {
+               for (int x = j; x < t.length(); x++) {
+                   dp[x][0] = 1;
+               }
+               break;
+           }
+       }
+       for (int i = 1; i < s.length(); i++) {
+           for (int j = 1; j < t.length(); j++) {
+               if (s.charAt(i) == t.charAt(j)) {
+                   dp[j][i] = dp[j - 1][i - 1] + 1;
+               } else {
+                   dp[j][i] = Math.max(dp[j - 1][i], dp[j][i - 1]);
+               }
+           }
+       }
+       return dp[t.length() - 1][s.length() - 1] == s.length();
+          }
+```
+
+--------
+
+方法二：
+
+思路：
+- 1、确定dp数组以及下标的含义
+  dp[i][j] 表示以下标i-1为结尾的字符串s，和以下标j-1为结尾的字符串t，相同子序列的长度为dp[i][j]。
+- 2、确定递推公式
+
+* 
+
+```
+if(s.charAt(i-1) == t.charAt(j-1)){
+    dp[i][j] = dp[i-1][j-1] + 1;
+}else{
+    dp[i][j] = dp[i][j-1];
+}
+```
+
+- 3、dp数组如何初始化
+- 4、确定遍历顺序
+- 5、举例推导dp数组
+
+代码：
+
+* 
+
+```
+public boolean isSubsequence(String s, String t) {
+       int length1 = s.length(); int length2 = t.length();
+       int[][] dp = new int[length1+1][length2+1];
+       for(int i = 1; i <= length1; i++){
+           for(int j = 1; j <= length2; j++){
+               if(s.charAt(i-1) == t.charAt(j-1)){
+                   dp[i][j] = dp[i-1][j-1] + 1;
+               }else{
+                   dp[i][j] = dp[i][j-1];
+               }
+           }
+       }
+       if(dp[length1][length2] == length1){
+           return true;
+       }else{
+           return false;
+       }
+   }
+```
+

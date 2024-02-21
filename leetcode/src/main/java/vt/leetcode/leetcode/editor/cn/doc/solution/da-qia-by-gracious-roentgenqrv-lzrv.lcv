@@ -1,0 +1,15 @@
+### 解题思路
+
+### 代码
+
+* c
+
+```c
+bool isSubsequence(char * s, char * t){
+    if(*s == '\0')return true;
+    if(*t == '\0')return false;
+    if(*s == *t)return isSubsequence(++s,++t);
+    else return isSubsequence(s,++t); 
+}
+```
+

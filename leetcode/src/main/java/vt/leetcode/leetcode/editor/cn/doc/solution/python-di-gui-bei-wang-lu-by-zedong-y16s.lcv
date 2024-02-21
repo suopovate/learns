@@ -1,0 +1,44 @@
+Decorator 版本
+
+* python3
+
+```python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        @lru_cache(maxsize=None)
+        def recur(coins, amount):
+            if amount == 0:
+                return 0
+            elif amount < 0 or not coins:
+                return float("inf")
+            else:
+                return min(recur(coins, amount-coins[0])+1, recur(coins[1:],amount))
+        mixv = recur(tuple(coins), amount)
+        return mixv if mixv!=float("inf") else -1
+```
+
+自己实现版本
+
+* python3
+
+```python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        dic = {}
+        def recur(coins, amount):
+            if amount == 0:
+                return 0
+            elif amount < 0 or not coins:
+                return float("inf")
+            else:
+                key = (tuple(coins),amount)
+                if key in dic:
+                    return dic[key]
+                else:
+                    res = min(recur(coins, amount-coins[0])+1, recur(coins[1:],amount))
+                    dic[key] = res
+                    return res
+        mixv = recur(coins, amount)
+        return mixv if mixv else -1
+```
+

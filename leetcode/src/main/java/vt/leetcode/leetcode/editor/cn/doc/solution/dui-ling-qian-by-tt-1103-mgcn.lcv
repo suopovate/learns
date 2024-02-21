@@ -1,0 +1,45 @@
+> Problem: [322. 零钱兑换]
+
+这个题我们可以引用一个INT_MAX来表示无效状态：并通过一个大小为amount+1的一维数组来进行动态规划，即使用dp[amount + 1]来记录每个金额所需的最少硬币数量。
+首先，我们将 dp数组的长度设置为 amount + 1，其中 amount 表示目标金额。这样可以确保数组能够存储从金额 0 到金额 amount 的最小硬币数量。
+
+接下来，我们初始化 dp[0] 为 0，表示金额为 0 时所需的硬币数量为 0，作为我们的一个初始值。
+然后，我们从金额 1 开始遍历到金额 amount，对于每个金额 `i`，我们遍历硬币数组 coins，对于每个硬币面额 coins[j]，我们检查以下条件：
+
+如果硬币面额 coins[j] 小于等于当前金额 i：这意味着我们可以使用这个硬币来凑出金额 i。
+dp[i - coins[j]] 不是一个无效状态（即不等于 INT_MAX）：这可以理解成金额 i - coins[j] 是一个有效的子问题，可以通过使用硬币 coins[j] 来凑出。
+
+如果以上两个条件都满足，我们通过比较使用当前硬币后，剩余金额 i - coins[j] 所需的硬币数量加上当前硬币 1 枚的总数，与当前金额 i 的最小硬币数量 dp[i] 进行比较，并更新 dp[i] 为较小的值。
+
+通过这样的遍历和比较，我们最终可以得到金额amount所需的最小硬币数量。
+
+最后，我们检查 dp[amount] 的值是否为无效状态，即是否为INT_MAX，
+如果是，则说明无法凑出总金额，返回 -1。否则，返回 dp[amount]，即最少的硬币数量。
+
+不过这种写法略显复杂，稍后我再写一份更加易于理解的方法出来。
+
+# Code
+
+* []
+
+```C
+
+int coinChange(int* coins, int coinsSize, int amount) {
+    int dp[amount + 1];
+    dp[0] = 0;
+
+    for (int i = 1; i <= amount; i++) {
+        dp[i] = INT_MAX;
+        for (int j = 0; j < coinsSize; j++) {
+            if (coins[j] <= i && dp[i - coins[j]] != INT_MAX) {
+                if (dp[i - coins[j]] + 1 < dp[i]) {
+                    dp[i] = dp[i - coins[j]] + 1;
+                }
+            }
+        }
+    }
+
+    return dp[amount] == INT_MAX ? -1 : dp[amount];
+}
+```
+

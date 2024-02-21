@@ -1,0 +1,47 @@
+### 解题思路
+
+此处撰写解题思路
+
+### 代码
+
+* golang
+
+```golang
+func coinChange(coins []int, amount int) int {
+    if amount == 0 {
+        return 0
+    }
+
+    dp := make([]int, amount+1)
+    for i := 0; i < amount+1; i++ {
+        dp[i] = -1
+    }
+
+    for _, v := range coins {
+        for i := v; i <= amount; i++ {
+            if i == v {
+                dp[i] = 1
+                continue
+            }
+
+            if dp[i-v] > 0 {
+                if dp[i] > 0 {
+                    // dp[i] = min322(dp[i], dp[i-v]+1)
+                    if dp[i] > dp[i-v]+1 {
+                        dp[i] = dp[i-v] + 1
+                    }
+                } else {
+                    // dp[i] = max322(dp[i], dp[i-v]+1)
+                    if dp[i] < dp[i-v]+1 {
+                        dp[i] = dp[i-v] + 1
+                    }
+                }
+            }
+        }
+    }
+
+    return dp[amount]
+}
+
+```
+

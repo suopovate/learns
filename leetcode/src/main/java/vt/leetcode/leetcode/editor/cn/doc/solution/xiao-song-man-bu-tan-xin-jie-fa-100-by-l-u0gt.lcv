@@ -1,0 +1,28 @@
+[b站体验更好](https://www.bilibili.com/video/BV1mL411T7Be?spm_id_from=333.999.0.0)
+![...eo_245163.753061.MOV](https://leetcode.cn/problems/integer-replacement/solution/xiao-song-man-bu-tan-xin-jie-fa-100-by-l-u0gt/72813f02-ddbb-4c29-a1c8-290b4a32cded)
+
+* java
+
+```java
+class Solution {
+    public int integerReplacement(int m) {
+        long n = (long)m;
+        int time = 0;
+        while(n != 1){
+            if(n % 2 == 1){
+                long temp = n - 1;// 默认取n - 1
+                // temp!=3 并且temp / 2 为奇数，选n+1
+                if(temp / 2 % 2 == 1 && temp / 2 != 1)
+                    n += 1;
+                else n = temp;    
+            }else n /= 2;
+            time ++; 
+        }
+        return time;
+    }
+}
+```
+
+> 我是小松漫步，20年某末流985本科毕业，前两个月离职腾讯，现在不断在b站更新题解视频，手绘图解和代码实战，专注android与算法，可以关注一下哦，这样每天上b站第一个动态就是题解视频啦
+> 另外建有学习群，每天推送题解，每周与群友进行模拟面试，互相鼓励学习，有意参与可以加我微信哦  cs183071301，我拉你进群
+

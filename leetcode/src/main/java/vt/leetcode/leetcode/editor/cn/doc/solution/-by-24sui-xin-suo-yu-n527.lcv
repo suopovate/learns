@@ -1,0 +1,33 @@
+### 解题思路
+
+1. 其实就是一个**原地哈希**，把对应的值放到正确的位置上，所以，**「值不配位」的情况即缺失的位置索引和重复的值数字**。
+2. 官方题解包括其他一些题解都是原地哈希的变种，要么变号要么差值，个人感觉都是手段都没有很好得体现原地哈希的本质。
+
+### 代码实现
+
+* java
+
+```java
+class Solution {
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        int n = nums.length;
+        for(int i = 0; i < n; i++) {
+            while(nums[i] != nums[nums[i] - 1]) {
+                swap(nums, i, nums[i] - 1);
+            }
+        }
+        List<Integer> list = new ArrayList<> ();
+        for(int i = 0; i < n; i++) {
+            if(nums[i] != i + 1) list.add(i + 1);
+        }
+        return list;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int k = nums[i];
+        nums[i] = nums[j];
+        nums[j] = k;
+    }
+}
+```
+

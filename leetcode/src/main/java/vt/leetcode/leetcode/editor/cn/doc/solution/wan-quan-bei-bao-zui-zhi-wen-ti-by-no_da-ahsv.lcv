@@ -1,0 +1,33 @@
+### 解题思路
+
+dp[j]表示装满容量为j的背包所需要的最少硬币数量
+初始值dp[0]=0 表示背包容量为0的背包 硬币数量为0
+
+动态规划转移方程dp[j] = Math.min(dp[j], dp[j-coins[i]] + 1);   
+min中的dp[j]代表上一层的dp[j]， dp[j-coins[i]] + 1表示选中该硬币，即背包容量减去该硬币值后的容量所需要的最小硬币数量，然后加上该硬币
+
+ps:本来dp数组初始值为Integer.MAX_VALUE,但是有一个用例通不过，因为Integer.MAX_VALUE+1==Integer.MIN_VALUE，即最小值-1
+故设置最大值为amount+1  (因为硬币的最小值为1， 故amount值最多可有amount枚硬币)
+
+### 代码
+
+* java
+
+```java
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int len = coins.length;
+        int max = amount + 1;
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp, max);
+        dp[0] = 0;
+        for (int i = 0; i < len; i++){
+            for (int j = coins[i]; j <= amount; j++){
+                dp[j] = Math.min(dp[j], dp[j-coins[i]] + 1);
+            }
+        }
+        return dp[amount] > amount ? -1 : dp[amount];
+    }
+}
+```
+

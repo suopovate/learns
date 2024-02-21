@@ -1,0 +1,43 @@
+执行用时：0 ms, 在所有 C++ 提交中击败了100.00% 的用户
+内存消耗：8.7 MB, 在所有 C++ 提交中击败了5.04% 的用户
+通过测试用例：111 / 111
+
+### 解题思路
+
+从尾部开始加1，如果要进位，则继续；
+如果是 9999 这种的，最后进位还是1，需要在最左侧再插入 1。
+
+### 代码
+
+* cpp
+
+```cpp
+int __FAST_IO__ = []() {
+    ios::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    return 0;
+}();
+
+class Solution {
+public:
+  vector<int> plusOne(vector<int>& digits) {
+    auto it = digits.rbegin();
+    if (*it < 9) {
+      *it += 1;
+      return digits;
+    }
+    int carry = 1;
+    for (auto it = digits.rbegin(); carry && it != digits.rend(); ++it) {
+      *it += 1;
+      carry = 0;
+      if (*it == 10) {
+        *it = 0;
+        carry = 1;
+      }
+    }
+    if (carry) digits.insert(digits.begin(), 1);
+    return digits;
+  }
+};
+```
+

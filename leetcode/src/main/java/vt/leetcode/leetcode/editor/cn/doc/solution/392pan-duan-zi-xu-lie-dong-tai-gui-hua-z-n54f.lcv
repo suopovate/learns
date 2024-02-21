@@ -1,0 +1,57 @@
+> Problem: [392. 判断子序列](https://leetcode.cn/problems/is-subsequence/description/)
+
+[TOC]
+
+# 思路
+
+> 讲述看到这一题的思路
+
+# 解题方法
+
+> 描述你的解题方法
+
+# 复杂度
+
+- 时间复杂度:
+
+> 添加时间复杂度, 示例： $O(n)$
+
+- 空间复杂度:
+
+> 添加空间复杂度, 示例： $O(n)$
+
+# Code
+
+* []
+
+```Java
+
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+
+    //dp[i][j] 以i-1为结尾的字符串s和以j-1为结尾的字符串t的相同子序列的长度
+        int[][] dp = new int[s.length()+1][t.length()+1];
+
+        for(int i = 1; i <= s.length(); i++){
+
+            for(int j = 1; j <= t.length(); j++){
+
+                //t中的一个字符在s中也有 找到了相同的字符
+                if(s.charAt(i-1) == t.charAt(j-1)){
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                }else{
+                //判断s是否是t的子序列 相当于在t要删除元素继续匹配
+                    dp[i][j] = dp[i][j-1];
+                }
+            }
+        }
+        //如果s和t的最长公共子序列大小长度等于s，说明s和t的最长相同子序列就是s
+        if(dp[s.length()][t.length()] == s.length()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+```
+

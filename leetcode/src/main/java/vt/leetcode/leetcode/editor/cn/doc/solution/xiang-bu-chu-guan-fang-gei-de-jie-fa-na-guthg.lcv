@@ -1,0 +1,42 @@
+> Problem: [697. 数组的度](https://leetcode.cn/problems/degree-of-an-array/description/)
+
+比较容易理解，希望对你有帮助
+
+# Code
+
+* []
+
+```Java
+
+class Solution {
+    public int findShortestSubArray(int[] nums) {
+        Set set=new HashSet();
+        int d=1,du=1;
+        int len=1,length=1;
+        for(int i=0;i<nums.length;i++){
+            if(!set.contains(nums[i])){
+                for(int j=i+1;j<nums.length;j++){
+                    if(nums[i]==nums[j]){
+                        set.add(nums[i]);
+                        d++;
+                        len=j+1-i;
+                    }
+                }
+                if(d>du){
+                    du=d;
+                    length=len;
+                }
+                else if(d==du){
+                    if(len<length){
+                        length=len;
+                    }
+                }
+                d=1;
+                len=1;
+            }
+        }
+        return length;
+    }
+}
+```
+

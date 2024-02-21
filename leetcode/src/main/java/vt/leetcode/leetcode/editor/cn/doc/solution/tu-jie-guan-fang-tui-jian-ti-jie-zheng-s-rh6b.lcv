@@ -1,0 +1,80 @@
+![图解每日一练.jpg](https://pic.leetcode-cn.com/1615817903-fzmpwZ-%E5%9B%BE%E8%A7%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E7%BB%83.jpg)
+
+---
+
+### 🧠 解题思路
+
+反转数字，我们首先想到的就是取余，但是可能会遇到反转后，数字超过了最大限制或最小限制。
+
+所以我们可以一边反转，一边检测，这样做的话，若遇到问题，将会立即停止。
+
+---
+
+### 🎨 图解演示
+
+<![1.jpg](https://pic.leetcode-cn.com/1615825074-hizegU-1.jpg),![2.jpg](https://pic.leetcode-cn.com/1615825077-SbrBWZ-2.jpg),![3.jpg](https://pic.leetcode-cn.com/1615825079-aZblZQ-3.jpg),![4.jpg](https://pic.leetcode-cn.com/1615825081-JgaOPE-4.jpg),![5.jpg](https://pic.leetcode-cn.com/1615825083-eUaevo-5.jpg)>
+
+---
+
+### 🍭 示例代码
+
+* []
+
+```Javascript
+var reverse = function(x) {
+    let res = 0;
+    while(x){
+        res = res * 10 + x % 10;
+        if(res > Math.pow(2, 31) - 1 || res < Math.pow(-2, 31)) return 0;
+        x = ~~(x / 10);
+    }
+    return res;
+};
+```
+
+* []
+
+```Java
+class Solution {
+    public int reverse(int x) {
+        int rev = 0;
+        while (x != 0) {
+            int pop = x % 10;
+            x /= 10;
+            if (rev > Integer.MAX_VALUE/10 || (rev == Integer.MAX_VALUE / 10 && pop > 7)) return 0;
+            if (rev < Integer.MIN_VALUE/10 || (rev == Integer.MIN_VALUE / 10 && pop < -8)) return 0;
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+}
+```
+
+* []
+
+```C++
+class Solution {
+public:
+    int reverse(int x) {
+        int rev = 0;
+        while (x != 0) {
+            int pop = x % 10;
+            x /= 10;
+            if (rev > INT_MAX/10 || (rev == INT_MAX / 10 && pop > 7)) return 0;
+            if (rev < INT_MIN/10 || (rev == INT_MIN / 10 && pop < -8)) return 0;
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+};
+```
+
+---
+
+### 转身挥手
+
+嘿，少年，做图不易，留下个赞或评论再走吧！谢啦~ 💐
+
+差点忘了，祝你牛年大吉 🐮 ，AC 和 Offer 📑 多多益善~
+
+⛲⛲⛲ 期待下次再见~

@@ -1,0 +1,344 @@
+### 前言
+
+背包问题 (Knapsack problem) 是一种组合优化的 NP (NP-Complete) 完全问题。问题可以描述为：给定一组物品，每种物品都有自己的重量和价格，在限定的总重量内，我们如何选择，才能使得物品的总价格最高。问题的名称来源于如何选择最合适的物品放置于给定背包中。[@百度百科](https://baike.baidu.com/item/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98)
+
+<br> </br>
+
+**一般问题：**   我们有 $n$ 件物品和一个容量 $(capacity)$ 为 $C$ 的背包，记第 $i$ 件物品的重量 $(weight)$ 为 $w_i$，价值 $(value)$ 为 $v_i$，求将哪些物品装入背包可使价值总和最大。
+
+> **0-1背包：** 如果限定每件物品最多只能选取 $1$ 次（即 $0\ 或\ 1$ 次），则问题称为 `0-1背包问题`。
+
+> **完全背包：** 如果每件物品最多可以选取无限次，则问题称为 `完全背包问题`。
+
+假设放入背包中的物品 $i$ 的数目为 $k_{i}$，则上述背包问题在数学上可表达为：
+
+$\max \  \sum_{i=0}^{n-1}\ k_{i} \cdot v_{i} \ ,$
+受限于 $s.t.$
+
+$$
+\sum_{i=0}^{n-1} k_{i} \cdot w_{i} \leqslant C, \quad
+
+\left\{\begin{array}{lll}
+k_{i} \in\{0,1\} & \textcolor{red}{\longleftarrow} & \text { 「0-1背包问题」 } \\
+
+k_{i} \in\{0,1,2, \ldots,+\infty\} & \textcolor{red}{\longleftarrow} & \text { 「完全背包问题」 }
+\end{array}\right.
+$$
+
+<br> </br>
+
+**0-1背包** 和 **完全背包** 是两种最为常见的背包问题，其他类型的背包问题，如多重背包、分组背包等可参考网上的一些资料， 如：《背包问题九讲》[（网页版）](http://cuitianyi.com/Pack/) [（PDF版）](https://comzyh.com/upload/PDF/Pack-PDF-Comzyh.pdf)
+
+---
+
+**拓展：**
+* 「0-1 背包」是「完全背包」的基础，可参考以下题目掌握「0-1 背包问题」：
+
+  | 题号 |  题解 | 难度 |
+  | :-----| :---- | :----: |
+  | [416. 分割等和子集](https://leetcode-cn.com/problems/partition-equal-subset-sum/) |  [记忆化搜索、动态规划 + 空间优化](https://leetcode-cn.com/problems/partition-equal-subset-sum/solution/by-flix-szk7/) | 中等 |
+  | [474. 一和零](https://leetcode-cn.com/problems/ones-and-zeroes/) |   [记忆化搜索、动态规划 + 空间优化](https://leetcode-cn.com/problems/ones-and-zeroes/solution/by-flix-a384/) | 中等 |
+  | [494. 目标和](https://leetcode-cn.com/problems/target-sum/) |  [记忆化搜索、动态规划 + 空间优化](https://leetcode-cn.com/problems/target-sum/solution/by-flix-rkb5/) | 中等 |
+  | [1049. 最后一块石头的重量 II](https://leetcode-cn.com/problems/last-stone-weight-ii/) |  [记忆化搜索、动态规划 + 空间优化](https://leetcode-cn.com/problems/last-stone-weight-ii/solution/by-flix-m5mx/) | 中等 |
+
+&nbsp;
+
+* 对「0-1 背包」模板稍加拓展，可用于解决一众「完全背包问题」：
+
+  | 题号 |  题解 | 难度 |
+  | :-----| :---- | :----: |
+  | （本题）[322. 零钱兑换](https://leetcode-cn.com/problems/coin-change/) |  [从0-1背包到完全背包，逐层深入+推导](https://leetcode-cn.com/problems/coin-change/solution/by-flix-su7s/) | 中等 |
+  | （雷同题目）[剑指 Offer II 103. 最少的硬币数目](https://leetcode.cn/problems/gaM7Ch/) |  [从0-1背包到完全背包，逐层深入+数学推导](https://leetcode.cn/problems/gaM7Ch/solution/by-flix-7gza/) | 中等 |
+  | （接近本题）[518. 零钱兑换 II](https://leetcode-cn.com/problems/coin-change-2/) |  [从0-1背包到完全背包，逐层深入+数学推导](https://leetcode-cn.com/problems/coin-change-2/solution/by-flix-e1vv/) | 中等 |
+  | （接近本题）[279. 完全平方数](https://leetcode-cn.com/problems/perfect-squares/) |  [详解完全背包（含数学推导）](https://leetcode-cn.com/problems/perfect-squares/solution/by-flix-sve5/) | 中等 |
+
+---
+
+<br> </br>
+
+**动态规划** 是解决「0−1 背包问题」和「完全背包问题」的标准做法。
+
+---
+
+**1. 「0−1 背包问题」**
+
+一般地，我们定义：$dp[i][j]$ 表示前 $i$ 件物品放入一个容量为 $j$ 的背包可以获得的最大价值（每件物品最多放一次），则状态转移过程可表示为：
+
+* **不选择**第 $i$ 件物品，则问题转化为了前 $i-1$ 件物品放入容量为 $j$ 的背包中所获得的价值：$dp[i][j] =dp[i-1][j]$ ；
+* **选择**第 $i$ 件物品，则问题转化为了前 $i-1$ 件物品放入容量为 $j-w_i$ 的背包中所获得的价值 $dp[i-1][j-w_i]$ 加上要放入的第 $i$ 件物品的价值 $v_i$：$dp[i][j] =dp[i-1][j-w_i] + v_i$ 。注意，能放入第 $i$ 件物品的前提为：$w_i \leq j$。
+
+两种情况取较大者即可得到「状态转移方程」为：
+
+$dp[i][j] = \max\left\{ \ dp[i-1][j],\quad dp[i-1][j-w_i] + v_i \  \right\}\ .$
+
+---
+
+**2. 「完全背包问题」**
+
+类似于「0−1 背包」，但不同的是每件物品有无限个供应：从每件物品的数量来考虑，相关方案已并非取（取 $1$ 件）或不取（取 $0$ 件）两种情况，而是有取 $0$ 件、取 $1$ 件、取 $2$ 件......取 $k$ 件等很多种。
+
+一般地，我们定义：$dp[i][j]$ 表示前 $i$ 件物品放入一个容量为 $j$ 的背包可以获得的最大价值（每件物品有无限个）。每件物品可以被选择多次，因此 $dp[i][j]$ 应为以下所有可能方案中的最大值：
+
+- 第 $i$ 件物品选 $0$ 个的最大价值 $dp[i-1][j]$ ；
+- 第 $i$ 件物品选 $1$ 个的最大价值 $dp[i-1][j-w_i] + v_i$ ；
+- 第 $i$ 件物品选 $2$ 个的最大价值 $dp[i-1][j-2⋅w_i] + 2⋅v_i$ ；
+  ......
+- 第 $i$ 件物品选 $k$ 个的最大价值 $dp[i-1][j-k⋅w_i] + k⋅v_i$ 。
+
+> 注意，第 $i$ 件物品能放入 $k$ 件的前提为：$k⋅w_i \leq j$。
+
+取最大值即可得到「状态转移方程」为：
+
+$$dp[i][j] = \max\left\{ \  dp[i-1][j-k\cdot w_i] + k\cdot v_i \  \right\}\ ,\quad
+0<=k\cdot w_i<=j
+$$
+
+<br> </br>
+
+由状态方程可知，我们可以借鉴「0−1 背包」问题的求解方式来解决「完全背包问题」，但对于每件物品而言每次都需要枚举所有可行的物品数目 $k$，这无疑会大大增加系统的开销。
+
+事实上，我们可以对上述状态转移方程进行优化，得到更为简洁的表达（见下）。
+<br>
+
+**完全背包问题的状态空间优化**
+
+将上述状态转移方程展开可得：
+
+$$（1）dp[i][j] = \max \{ \ dp[i-1][j],\quad  \textcolor{red}{dp[i-1][j-w_i] + v_i}, \textcolor{teal}{\ dp[i-1][j-2\cdot w_i] + 2\cdot v_i}, \ \ \ \\
+\ ..., \ \textcolor{blue}{dp[i-1][j-k\cdot w_i] + k\cdot v_i} \ \} ,\quad \quad \quad\quad
+0<=k\cdot w_i<=j
+$$
+
+而恰巧的是对于 $dp[i][j-w_i]$ 我们有：
+
+$$（2）dp[i][j-w_i] = \max \{ \ \textcolor{red}{dp[i-1][j-w_i]}, \ \textcolor{teal}{dp[i-1][j-2\cdot w_i] + v_i}, \quad \quad \quad \quad \quad \quad \quad  \quad \\
+\ ..., \ \textcolor{blue}{dp[i-1][j-k\cdot w_i] + (k-1)\cdot v_i} \ \} ,\quad \quad
+w_i<=k\cdot w_i<=j
+$$
+
+观察发现，（2）式与（1）式中的后 $k$ 项刚好相差了一个 $v_i$，将（2）式代入（1）式可得简化后的「完全背包问题」的「状态转移方程」为：
+
+$$（3）dp[i][j] = \max \{ \ dp[i-1][j],\quad  \textcolor{red}{dp[i]}[j-w_i] + v_i\ \} ,\quad
+0<=w_i<=j \ \ \quad \quad \quad \quad \quad \quad
+$$
+
+> ⚠️ 注意，式（3）与「0-1 背包问题」的状态转移方程及其相似，差别（以红色标注）在于第二项中的状态转移是来自上一行还是本行。这也决定了具体编程实现时状态更新方式的异同。
+
+---
+
+**对比总结**
+
+两种背包问题的状态转移方程对比总结如下：
+
+$$ 0-1背包：dp[i][j] = \max\left\{ \ dp[i-1][j],\quad \textcolor{red}{dp[i-1]}[j-w_i] + v_i \  \right\},\quad 0<=w_i<=j \quad \quad$$
+
+$$  完全背包：\ dp[i][j] = \max \{ \ dp[i-1][j],\quad  \textcolor{red}{dp[i]}[j-w_i] + v_i\ \} ,\quad \quad \quad 0<=w_i<=j \quad \quad
+$$
+
+> ⚠️ 求最优解的背包问题中，有的题目要求`恰好装满背包`时的最优解，有的题目则要求`不超过背包容量`时的最优解。一种区别这两种问法的实现方法是在状态初始化的时候有所不同。[摘自@《背包问题九讲》[（网页版）](http://cuitianyi.com/Pack/) [（PDF版）](https://comzyh.com/upload/PDF/Pack-PDF-Comzyh.pdf)]
+> 初始化的 $dp$ 数组事实上就是在背包中没有放入任何物品时的合法状态：
+> 1. 如果要求`恰好装满背包`，那么在初始化时 $dp[i][0]=0$，其它 $dp[i][1,2,...,*]$ 均设为 $-∞$。这是因为此时只有容量为 $0$ 的背包可能被价值为 $0$ 的 nothing “恰好装满”，而其它容量的背包均没有合法的解，属于未定义的状态。
+> 2. 如果只是要求`不超过背包容量`而使得背包中的物品价值尽量大，初始化时应将  $dp[*][*]$ 全部设为 $0$。这是因为对应于任何一个背包，都有一个合法解为 “什么都不装”，价值为 $0$。
+
+---
+
+**题目分析：**
+
+给定一个整数数组 $coins$，表示不同面额的硬币；以及一个整数 $amount$，表示总金额。本题要求的是在**每种硬币的数量是无限**的情况下，计算并返回可以凑成总金额所需的 **最少的硬币个数** 。每种硬币的数量是无限的，这是一个典型的「完全背包」求最优解问题。
+
+<br> </br>
+
+**I. 状态定义**
+
+$\ \quad$ 对于本题，定义二维数组 $dp[i][j]$ 表示：从前 $i$ 种硬币中组成金额 $j$ 所需最少的硬币数量。
+
+<br> </br>
+
+**II. 状态转移**
+
+$\ \quad$ 基于题目要求，上述「完全背包」的状态转移方程可修改为：
+
+$$优化前：dp[i][j] = \min\left\{ \  dp[i-1][j-k\cdot w_i] + k \  \right\}\ ,\quad
+0<=k\cdot w_i<=j \quad \quad \quad
+$$
+
+$$优化后：dp[i][j] = \min \{ \ dp[i-1][j],\quad  \textcolor{red}{dp[i]}[j-w_i] + 1\ \} ,\quad 0<=w_i<=j \quad \quad
+$$
+
+> 对应于对于第 $i$ 种硬币，选 $0$、$1$、$2$、...、$k$ 个组成金额 $j$ 时所对应的最小硬币数目。
+
+<br> </br>
+
+**III. 初始化**
+
+$\ \quad$ 记整数数组 `coins` 的长度为 $n$。为便于状态更新，减少对边界的判断，初始二维 $dp$ 数组维度为 ${(n+1) \times (*)}$，其中第一维为 $n+1$ 也意味着：第 $i$ 种硬币为 $coins[i-1]$，第 $1$ 种硬币为 $coins[0]$，第 $0$ 种硬币为空。
+
+初始化时，**不合法**的或未定义的状态则可以设置为正无穷或一个不可能取到的较大值：
+* $dp[0][0] = 0$：表示从前 $0$ 种硬币中选出若干个组成金额 $0$ 所对应的最小硬币数目为 $0$，即「空集合」不选任何硬币即可得到金额 $0$。
+* 对于其他 $dp[0][j],\ \ j\geq 1$，则可将其设置为正无穷或一个不可能取到的较大值，例如 $dp[0][j] = +\infty$：「空集合」中无法选出任何硬币组成金额 $j\geq 1$。
+
+  > 此外，其他的 $dp[i][0] = 0$，表示从前 $i$ 个硬币中凑出金额 $0$ 所需要的硬币数目为 $0$。这在程序迭代实现中已有体现，在此无需提前重复定义。
+
+&nbsp;
+
+---
+
+### 代码
+
+为便于理解，这里给出从套用「0-1背包问题」到优化的「完全背包问题」的代码，逐层递进。
+
+<br> </br>
+
+**1.【二维DP，三层循环】**
+动态规划的基础代码如下：
+
+* []
+
+```Python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        
+        n = len(coins)
+        dp = [[amount+1] * (amount+1) for _ in range(n+1)]    # 初始化为一个较大的值，如 +inf 或 amount+1
+        # 合法的初始化
+        dp[0][0] = 0    # 其他 dp[0][j]均不合法
+        
+        # 完全背包：套用0-1背包【遍历硬币数目k】
+        for i in range(1, n+1):                     # 第一层循环：遍历硬币
+            for j in range(amount+1):               # 第二层循环：遍历背包
+                for k in range(j//coins[i-1]+1):    # 第三层循环：当前硬币coin取k个 (k*coin<=amount)
+                    dp[i][j] = min( dp[i][j], dp[i-1][j-k*coins[i-1]] + k )
+
+        ans = dp[n][amount] 
+        return ans if ans != amount+1 else -1
+```
+
+> 仿照「0-1背包」中的空间优化，可将上述代码实现从【二维DP，三层循环】变为【一维DP，三层循环】，即在"第二层循环-遍历背包" 中「倒序遍历」背包容量。可参考拓展中给出的0-1背包问题的题解，如 「[416. 分割等和子集](https://leetcode-cn.com/problems/partition-equal-subset-sum/solution/by-flix-szk7/)」。
+
+&nbsp;
+
+**2.【二维DP，两层循环】**
+基于优化后的状态转移方程，可省去第三层循环，代码如下：
+
+* []
+
+```Python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        
+        n = len(coins)
+        dp = [[amount+1] * (amount+1) for _ in range(n+1)]    # 初始化为一个较大的值，如 +inf 或 amount+1
+        # 合法的初始化
+        dp[0][0] = 0    # 其他 dp[0][j]均不合法
+        
+        # 完全背包：优化后的状态转移
+        for i in range(1, n+1):             # 第一层循环：遍历硬币
+            for j in range(amount+1):       # 第二层循环：遍历背包
+                if j < coins[i-1]:          # 容量有限，无法选择第i种硬币
+                    dp[i][j] = dp[i-1][j]
+                else:                       # 可选择第i种硬币
+                    dp[i][j] = min( dp[i-1][j], dp[i][j-coins[i-1]] + 1 )
+
+        ans = dp[n][amount] 
+        return ans if ans != amount+1 else -1
+```
+
+&nbsp;
+
+**3.【一维DP，两层循环】** 动态规划的滚动数组优化
+
+在上面的状态转移方程中，每一行的 $dp[i][j]$ 状态值都只与上一行（正上方）的 $dp[i-1][j]$ 和 本行（左方）的$dp[i][j-*]$ 状态值有关，因此可基于**滚动数组**的思想进行对状态空间 $dp$ 进行优化而省去第一维度：
+
+$$\textcolor{red}{dp2}[j] = \min \{ \ dp[j],\quad  \textcolor{red}{dp2}[j-w_i] + 1\ \} ,\quad 0<=w_i<=j \quad \quad
+$$
+
+* []
+
+```Python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        
+        n = len(coins)
+        dp = [amount+1] * (amount+1)    # 初始化为一个较大的值，如 +inf 或 amount+1
+        dp[0] = 0        # 合法的初始化
+        
+        # 完全背包：优化后的状态转移
+        for i in range(1, n+1):             # 第一层循环：遍历硬币
+            dp2 = [amount+1] * (amount+1)   # 滚动数组
+            for j in range(amount+1):       # 第二层循环：遍历背包
+                if j < coins[i-1]:          # 容量有限，无法选择第i种硬币
+                    dp2[j] = dp[j]
+                else:                       # 可选择第i种硬币
+                    dp2[j] = min( dp[j], dp2[j-coins[i-1]] + 1 )
+            dp = dp2
+
+        ans = dp[amount] 
+        return ans if ans != amount+1 else -1
+```
+
+* []
+
+```Python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        
+        dp = [amount+1] * (amount+1)    # 初始化为一个较大的值，如 +inf 或 amount+1
+        dp[0] = 0        # 合法的初始化
+        
+        # 完全背包：优化后的状态转移
+        for coin in coins:                  # 第一层循环：遍历硬币
+            dp2 = [amount+1] * (amount+1)   # 滚动数组
+            for j in range(amount+1):       # 第二层循环：遍历背包
+                if j < coin:                # 容量有限，无法选择第i种硬币
+                    dp2[j] = dp[j]
+                else:                       # 可选择第i种硬币
+                    dp2[j] = min( dp[j], dp2[j-coin] + 1 )
+            dp = dp2
+
+        ans = dp[amount] 
+        return ans if ans != amount+1 else -1
+```
+
+&nbsp;
+
+**4.【一维DP，两层循环】** **内层循环正序，省去滚动数组：**
+
+在状态转移过程中，每一行的 $dp$ 状态值都只与其**正上方**和**左方**的状态值有关，因此可对状态空间 $dp$ 进一步优化而省去滚动数组 $dp2$：
+
+$$\textcolor{red}{dp}[j] = \min \{ \ dp[j],\quad  \textcolor{red}{dp}[j-w_i] + 1\ \} ,\quad 0<=w_i<=j \quad \quad
+$$
+
+![LeetCode-CompletePack-update.png](https://pic.leetcode-cn.com/1650956345-fYJVof-LeetCode-CompletePack-update.png)
+
+考虑到我我们在更新 $dp[j]$ 时，使用的其实是**上一行**的  $dp[j]$ 和 **本行**已更新过的 $dp[j-w_i]$ 的值；因此在第二层循环中，通过**从小到大**正序计算即可保证在计算 $dp[j]$ 时所用到的 $dp[j]$ 来自上一行，而 $dp[j-w_i]$ 则来自本行。
+
+> ⚠️ 「完全背包问题」`内层循环正序`，而「0-1 背包问题」中`内层循环反序`，从原始的状态转移方程来看，在这一点上两者的区别也是显而易见的。
+
+* []
+
+```Python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        
+        dp = [amount+1] * (amount+1)    # 初始化为一个较大的值，如 +inf 或 amount+1
+        dp[0] = 0        # 合法的初始化；其他 dp[j]均不合法
+        
+        # 完全背包：优化后的状态转移
+        for coin in coins:                      # 第一层循环：遍历硬币
+            for j in range(coin, amount+1):     # 第二层循环：遍历背包【正序】
+                dp[j] = min( dp[j], dp[j-coin] + 1 )    # 可选择当前硬币
+
+        ans = dp[amount] 
+        return ans if ans != amount+1 else -1
+```
+
+**复杂度分析**
+最终优化后：
+* 时间复杂度：$O(n×amount)$，其中 $n$ 是`coins`数组的长度，$amount$ 为总金额。
+
+* 空间复杂度：$O(amount)$。
+
+<br> </br>
+
+---
+

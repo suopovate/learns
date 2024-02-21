@@ -1,0 +1,37 @@
+* 
+
+```
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+    int ls=s.length();
+    int lt=t.length();
+    if(ls==0){
+        return true;
+    }
+    if(lt==0){
+        return false;
+    }
+    bool dp[ls][lt];
+    for(int i=0;i<ls;i++){
+        for(int j=0;j<lt;j++){
+            dp[i][j]=false;
+        }
+    }
+    for(int i=0;i<lt;i++){
+        if(s[0]==t[i]||i>0&&dp[0][i-1]==true){
+            dp[0][i]=true;
+        }
+    }
+    for(int i=1;i<ls;i++){
+        for(int j=1;j<lt;j++){
+            if(dp[i][j-1]==true||dp[i-1][j-1]==true&&s[i]==t[j]){
+                dp[i][j]=true;
+            }
+        }
+    }
+    return dp[ls-1][lt-1];    
+    }
+};
+```
+

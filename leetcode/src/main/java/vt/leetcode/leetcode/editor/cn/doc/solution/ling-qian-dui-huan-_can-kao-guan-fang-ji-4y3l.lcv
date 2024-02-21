@@ -1,0 +1,47 @@
+### 解题思路
+
+此处撰写解题思路
+
+### 代码
+
+* python3
+
+```python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        # 回溯找不了最少
+        # def recall(coins, start, target):
+        #     nonlocal depth
+        #     if target == amount:
+        #         return depth
+        #     if target > amount:
+        #         return 
+        #     for index in range(start, len(coins)):
+        #         target += coins[index]
+        #         depth += 1
+        #         if recall(coins, index, target):
+        #             return depth
+        #         target -= coins[index]
+        #         depth -= 1
+        #     return 
+
+        # if not amount:
+        #     return 0
+        # depth = 0
+        # target = 0
+        # coins.sort(reverse=True)
+        # depth = recall(coins, 0, target)
+        # if depth:
+        #     return depth
+        # return -1
+
+        # dp
+        dp = [float(inf)] * (amount+1)
+        dp[0] = 0
+        for i in range(1, amount+1):
+            for coin in coins:
+                if i-coin>=0:
+                    dp[i] = min(dp[i], dp[i-coin]+1)
+        return dp[-1] if dp[-1] != float(inf) else -1
+```
+

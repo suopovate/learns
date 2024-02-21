@@ -1,0 +1,77 @@
+### 解题思路
+
+此处撰写解题思路
+
+### 代码
+
+* java
+
+```java
+class Solution {
+      public   int coinChange(int[] coins, int amount) {
+        //首先这个公式的动态规划是 多重背包问题
+        //dp[i][v]表示前i件物品放到v中的最大价值 这里是求最小个数呀 那就是min?
+        //dp[i][v]={dp[i-1][v](表示这个物品不放，总量也不增加）,dp[i][v-coins[i]]+1(这里是i而不是i-1意味着 只要满足条件
+        // 第i件物品还是可以放的 )可是基于这个题目 容量是amount coint内部相当于就是容量 每一次就加一 这些都能理解
+        // 可是每次应该是求min还是max呢 要求最小金币数 那就min吧 可是min不是会造成一直等于0？ 那要么就是还是求max
+        //然后i从0-i 求min
+        //先进行一些边界判断吧
+        if(amount ==0)
+            return 0;
+        if(coins.length==1&&coins[0]<amount){
+            //这里有两种可能 一种是 1 和2 能整除的 一种是 2 3 不能整除的
+            if(amount%coins[0]==0){
+                //如果可以整除的话
+                return amount/coins[0];
+            }
+            else{
+                //不能整除的话
+                return -1;
+            }
+        }
+
+        if(coins.length==1&&coins[0]==amount)
+            return 1;
+        if(coins.length==1&&coins[0]>amount)
+            return -1;
+        Arrays.sort(coins);
+        int len=coins.length;
+        int dp[][]=new int[len+1][amount+1];
+        //为了之后的min 给他们赋很大的初值
+        for(int i=0;i<=len;i++){
+            for(int j=0;j<=amount;j++) {
+                dp[i][j] = 1000;
+                //但是还有一些特殊情况
+                dp[i][0]=0;
+            }
+
+        }
+        //都不用初始哈 全是0
+        int min=100;
+        for(int i=1;i<=len;i++){
+            //可是网上说这里又是需要正向的  为了满足那个条件 就让coins从最大的开始操作吧
+            for(int v=coins[len-1-(i-1)];v<=amount;v++){
+                //上面这个循环就已经实现了v和amount之间的差别
+                //问题是 这里是要找最小的那个呀
+               // System.out.println(v);
+                //这个也太绝了 找最小的那个 然后就是看着两个那个小一点 然后加一
+                //但感觉不太对 还是需要min 然后在里面加一 ***了 所以是需要把dp的初值换成那种特别大的
+                dp[i][v]=Math.min(dp[i-1][v],dp[i][v-coins[len-1-(i-1)]]+1);
+               if(v==amount) {
+                   if(min>dp[i][v])
+                       min=dp[i][v];
+                   // System.out.println(dp[i][v]);
+                }
+            }
+        }
+  /*      int min=1000;
+        //然后按照我的理解是需要找到最小值的
+        for(int i=1;i<=len;i++){
+            if(min>dp[i][amount])
+                min=dp[i][amount];
+        }*/
+        return  min==100?-1:min;
+    }
+}
+```
+

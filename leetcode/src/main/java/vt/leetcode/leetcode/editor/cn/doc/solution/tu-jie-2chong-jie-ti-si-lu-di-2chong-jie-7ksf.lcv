@@ -1,0 +1,75 @@
+### 解题思路
+
+- 拿到这个题目，一般想到的思路是，对于从 0 到 n - 1 的每个下标，分别以每个下标作为开始下标，寻找对应的 S。最坏情况下，对于一个下标寻找 S 的时间复杂度是 O(n)，总时间复杂度是 O(n^2)，这种情况我试过，是会超时的
+- 我们来看看题目中举的例子具体来说，
+- A = [5,4,0,3,1,6,2] 从A[0]出发，所走过的是S[0] = {A[0], A[5], A[6], A[2]} = {5, 6, 2, 0}
+- 那现在从A[5]出发，所走过的是S[5] = {A[5], A[6], A[2], A[0]} = {6, 2, 0, 5}
+- 那我们从A[6]出发，所走过的是S[6] = {A[6], A[2], A[0], A[5]} = {2, 0, 5, 6}
+  ![image.png](https://pic.leetcode-cn.com/1643923386-YgKYXJ-image.png)
+- 从上面的举例我们就可以看出规律，从下标 0 开始，遍历数组 nums 中的元素，根据开始下标得到对应的集合 S,
+- 如果当前下标未被访问，则以当前下标为开始下标，遍历元素得到集合 S，直到回到开始下标，并将所有访问过的下标标记为已访问
+- 如果当前下标已被访问，则当前下标所属的集合 S 中的每个元素都已经被访问，因此可跳过当前下标
+
+### 代码
+
+* javascript
+
+```javascript
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var arrayNesting = function (nums) {
+  let n = nums.length;
+  let visited = new Array(n).fill(false);
+  let maxCount = 0;
+  for (let i = 0; i < n; i++) {
+    if (!visited[i]) {
+      let count = 0;
+      let index = i;
+      while (!visited[index]) {
+        visited[index] = true;
+        index = nums[index];
+        count++;
+      }
+      maxCount = Math.max(maxCount, count);
+    }
+  }
+  return maxCount;
+};
+```
+
+### 解题思路
+
+- 如果我们想节省空间复杂度，我们对上面的代码进行改造，也就是说访问过的元素，我们就把它设置为整数的最大值
+- 当我们访问的元素为整数的最大值，就表示已经访问过，则跳过此元素
+
+### 代码
+
+* javascript
+
+```javascript
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var arrayNesting = function (nums) {
+  let n = nums.length;
+  let maxCount = 0;
+  for (let i = 0; i < n; i++) {
+    if (nums[i] != Number.MAX_SAFE_INTEGER) {
+      let count = 0;
+      let index = i;
+      while (nums[index] != Number.MAX_SAFE_INTEGER) {
+        let temp = index;
+        index = nums[index];
+        nums[temp] = Number.MAX_SAFE_INTEGER;
+        count++;
+      }
+      maxCount = Math.max(maxCount, count);
+    }
+  }
+  return maxCount;
+};
+```
+

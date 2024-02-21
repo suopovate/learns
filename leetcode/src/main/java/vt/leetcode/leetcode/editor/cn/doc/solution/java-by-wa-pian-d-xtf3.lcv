@@ -1,0 +1,161 @@
+### 解题思路
+
+括号配对问题。左边start入栈，右边end配对。
+
+配对结算的时候累加这个id的占用时间，当前占用时间 = 当前时间差 - 开始与结束中被其它任务占用的时间
+
+栈.add{new int[]{开始时间，被占用时间}};
+
+栈 67.04%
+
+二维数组 95.92%
+
+开始想多了，排了个序，啊，排序简直多此一举。
+
+### 代码
+
+95.92%
+
+* java
+
+```java
+class Solution {
+	public int[] exclusiveTime(int n, List<String> logs) {
+		int[] ans = new int[n];
+		int[][] stack = new int[logs.size() + 1][2];
+		for (int i = 0, p = 0; i < logs.size(); i++) {
+			String[] _logs = logs.get(i).split(":");
+			int id = Integer.valueOf(_logs[0]);
+			int status = _logs[1].equals("start") ? 1 : 0;
+			int time = Integer.valueOf(_logs[2]);
+			if (status == 1) {// 这是一个开始，入栈
+				stack[p][0] = time; // 开始时间
+				stack[p][1] = 0; // 被占用0
+				p++;
+			} else {// 这是一个结束，同栈顶配对
+				int[] s = stack[--p];
+				int me = time - s[0] + 1;
+				int cur = me - s[1];
+				ans[id] += cur;
+				if (p != 0) {// 更新占用时间
+					stack[p - 1][1] += me;
+				}
+			}
+		}
+		return ans;
+	}
+}
+```
+
+67.04%
+
+* java
+
+```java
+class Solution {
+	public int[] exclusiveTime(int n, List<String> logs) {
+		int[] ans = new int[n];
+		Stack<int[]> stack = new Stack<>();
+		for (int i = 0; i < logs.size(); i++) {
+			String[] _logs = logs.get(i).split(":");
+			int id = Integer.valueOf(_logs[0]);
+			int status = _logs[1].equals("start") ? 1 : 0;
+			int time = Integer.valueOf(_logs[2]);
+			if (status == 1) {
+				stack.add(new int[] { time, 0 });
+			} else {
+				int[] s = stack.pop();
+				int cur = time - s[0] + 1 - s[1];
+				ans[id] += cur;
+				if (!stack.isEmpty()) {
+					stack.peek()[1] += cur + s[1];
+				}
+			}
+		}
+		return ans;
+	}
+}
+```
+
+我为什么要排序，为了毛啊
+
+10%
+
+* java
+
+```java
+class Solution {
+	public int[] exclusiveTime(int n, List<String> logs) {
+		int len = logs.size();
+		int[][] log = new int[len][3];
+		for (int i = 0; i < logs.size(); i++) {
+			String[] _logs = logs.get(i).split(":");
+			int id = Integer.valueOf(_logs[0]);
+			int status = _logs[1].equals("start") ? 1 : 0;
+			int time = Integer.valueOf(_logs[2]);
+			log[i] = new int[] { id, status, time };
+		}
+		Arrays.sort(log, (a, b) -> a[2] == b[2] ? a[0] == b[0] ? b[1] - a[1] : a[0] - b[0] : a[2] - b[2]);
+		int[] ans = new int[n];
+		Stack<int[]> stack = new Stack<>();
+		for (int i = 0; i < len; i++) {
+			int id = log[i][0], status = log[i][1], time = log[i][2];
+			if (status == 1) {
+				stack.add(new int[] { time, 0 });
+			} else {
+				int[] s = stack.pop();
+				int cur = time - s[0] + 1 - s[1];
+				ans[id] += cur;
+				if (!stack.isEmpty()) {
+					stack.peek()[1] += cur + s[1];
+				}
+			}
+		}
+		return ans;
+	}
+
+}
+```
+
+-----------
+
+一大波【栈】问题，汹涌来袭
+
+##### [简单] [20. 有效的括号](#[简单] [20. 有效的括号]) 【括号】【配对】
+
+##### [简单] [232. 用栈实现队列](https://leetcode-cn.com/problems/implement-queue-using-stacks/) 【设计】
+
+##### [[简单](https://leetcode-cn.com/problems/next-greater-element-i/solution/496-xia-yi-ge-geng-da-yuan-su-i-java-zho-qh8j/)] [496. 下一个更大元素 I](https://leetcode-cn.com/problems/next-greater-element-i/) 【单调栈】
+
+##### [中等] 227. 基本计算器 II【栈】【数学】【字符串】[[模拟 + 栈](https://leetcode-cn.com/problems/basic-calculator-ii/solution/wa-pian-227-ji-ben-ji-suan-qi-ii-java-81-cl6n/)] [[227. 基本计算器 II](https://leetcode-cn.com/problems/basic-calculator-ii/)]
+
+##### [[中等]](https://leetcode-cn.com/problems/water-and-jug-problem/solution/wa-pian-365-shui-hu-wen-ti-java-zhong-ji-f0hl/) [365. 水壶问题](https://leetcode-cn.com/problems/water-and-jug-problem/) 【GCD】【栈】
+
+##### [中等] 735. 行星碰撞【栈】[[栈](https://leetcode.cn/problems/asteroid-collision/solution/735-xing-xing-peng-zhuang-by-wa-pian-d-30f6/)] [[735. 行星碰撞](https://leetcode.cn/problems/asteroid-collision/)]
+
+##### [中等] [907. 子数组的最小值之和](https://leetcode-cn.com/problems/sum-of-subarray-minimums/) 【单调栈】
+
+##### [中等] 1653. 使字符串平衡的最少删除次数【栈】【字符串】【动态规划】[[栈](https://leetcode.cn/problems/minimum-deletions-to-make-string-balanced/solution/-by-wa-pian-d-wd7t/)] [[1653. 使字符串平衡的最少删除次数](https://leetcode.cn/problems/minimum-deletions-to-make-string-balanced/)]
+
+##### [中等] [1856. 子数组最小乘积的最大值](https://leetcode-cn.com/problems/maximum-subarray-min-product/) 【单调栈】
+
+##### [困难] [224. 基本计算器](https://leetcode-cn.com/problems/basic-calculator/)【括号】【配对】
+
+##### [困难] [42. 接雨水](https://leetcode-cn.com/problems/trapping-rain-water/) 【单调栈】
+
+##### [困难] [84. 柱状图中最大的矩形](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)【单调栈】
+
+##### [困难] [剑指 Offer II 039. 直方图最大矩形面积](https://leetcode-cn.com/problems/0ynMMM/) 【单调栈】 【同84不同解】
+
+##### [简单] 234. 回文链表【栈】【递归】【链表】【双指针】【回文】[[链表 + 回文 + 栈](https://leetcode-cn.com/problems/palindrome-linked-list/solution/234-hui-wen-lian-biao-by-wa-pian-d-y290/)] [[234. 回文链表](https://leetcode-cn.com/problems/palindrome-linked-list/)]
+
+##### [简单] 682. 棒球比赛【栈】【数组】【模拟】[[模拟栈](https://leetcode-cn.com/problems/baseball-game/solution/682-bang-qiu-bi-sai-java-by-wa-pian-d-ty6m/)] [[682. 棒球比赛](https://leetcode-cn.com/problems/baseball-game/)]
+
+##### [中等] 71. 简化路径 【栈】【字符串】[[模拟栈](https://leetcode-cn.com/problems/simplify-path/solution/71-jian-hua-lu-jing-java-zhong-ji-bai-li-pr64/)] [[71. 简化路径](https://leetcode-cn.com/problems/simplify-path/)]
+
+##### [中等] 150. 逆波兰表达式求值【模拟栈】[[模拟栈](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/solution/wa-pian-150-ni-bo-lan-biao-da-shi-qiu-zh-4t8u/)] [[150. 逆波兰表达式求值](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)]
+
+##### [困难] 32. 最长有效括号【栈】【字符串】【动态规划】【模拟栈】[[数组模拟栈](https://leetcode-cn.com/problems/longest-valid-parentheses/solution/32-zui-chang-you-xiao-gua-hao-java-zhong-brpu/)] [[32. 最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)]
+
+##### [中等] 1653. 使字符串平衡的最少删除次数【栈】【字符串】【动态规划】[[栈](https://leetcode.cn/problems/minimum-deletions-to-make-string-balanced/solution/-by-wa-pian-d-wd7t/)] [[1653. 使字符串平衡的最少删除次数](https://leetcode.cn/problems/minimum-deletions-to-make-string-balanced/)]
+

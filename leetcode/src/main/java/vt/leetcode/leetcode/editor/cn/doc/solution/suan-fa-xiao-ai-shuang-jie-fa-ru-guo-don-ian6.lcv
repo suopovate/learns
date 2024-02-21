@@ -1,0 +1,130 @@
+> 大家好，我是小爱，一个热爱算法并不断努力的女孩子！[关注我](https://leetcode-cn.com/u/helen_class/)，和我一起交流算法心得呀！
+
+---
+
+### 解法1：动态规划
+
+为了简便表示，我们用 `a, b` 表示字符串 `word1, word2`
+
+一般动态规划问题的解决可以分为如下三步：
+
+（1）确定状态表示，也即 `dp` 数组表示哪一种情况下的哪一个属性。
+
+对于本题来说，我们考虑利用 `dp[i][j]` 表示使 `a[0:i)` 与 `b[0:j)` 两个子串相同所需的最小删除步数。
+
+（2）确定当前问题分解成子问题的节点，也即与子问题的不同点。
+
+对于本题来说，我们可以考虑判断 `a[i]` 与 `b[j]` 是否相等：
+
+如果相等，那么我们可以将这两个字符进行匹配，也即只需要考虑 `a[0:i-1]` 与 `b[0:j-1]` 两个子字符串的最小删除次数即可；
+
+如果不相等，那么我们可以考虑删除 `a[i]`，考虑匹配 `a[0:i-1)` 与 `b[0:j)` 两个子字符串，或者删除 `b[j]`，考虑匹配 `a[0:i)` 与 `b[0:j-1)` 两个子字符串。
+
+综上所述，我们可以将 `dp[i][j]` 的值分解到 `dp[i - 1][j - 1]` 、`dp[i][j - 1]` 与 `dp[i - 1][j]` 三个子问题上。
+
+（3）确定当前问题与子问题的数值关系，一般的数值关系有最大值、最小值、求和等。
+
+对于本题来说，我们要求的是删除的最小步数，所以我们求 `dp[i][j]` 时，要取三个子问题的最小值。
+
+### 算法细节：
+
+我们考虑初始化 `dp[i][j]` 数组：
+
+$i = 0$ 时，相当于我们要匹配 空字符串与 `b[0:j)` 子字符串，要使两个子字符串相等，需要删除 $j$ 次，所以 $dp[0][j] = j$；同理有 $dp[i][0] = i$。
+
+最终我们要匹配 `a[0:n)` 与 `b[0:m)` 两个字符串，根据我们的状态定义，要返回的是 `dp[n][m]`
+
+---
+
+### 代码：
+
+* c++
+
+```c++
+class Solution {
+public:
+    int minDistance(string a, string b) {
+        int n = a.size(), m = b.size();
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1));
+
+        // 初始化 dp 数组
+        for (int i = 1; i <= n; ++i) dp[i][0] = i;
+        for (int j = 1; j <= m; ++j) dp[0][j] = j;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                char c = a[i - 1], d = b[j - 1];
+                if (c == d) {
+                    // 最后一个字符匹配：考虑匹配 a[0 : i - 1] = b[0 : j - 1]
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    // 考虑匹配 a[0 : i - 1] = b[0 : j] 或者 a[0 : i] = b[0 : j - 1]
+                    dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + 1;
+                }
+            }
+        }
+
+        return dp[n][m];
+    }
+};
+```
+
+---
+
+### 复杂度分析：
+
+- 时间复杂度：$O(nm)$，其中 $n, m$ 为字符串 `a, b` 的长度
+- 空间复杂度：$O(nm)$
+
+---
+
+### 解法二：最长公共子序列
+
+我们发现，我们可以直接保留 `a, b` 两个字符串的最长公共子序列，删除剩下的部分即可。这时，我们只需要到题库搜索：最长公共子序列，就可以把官方题解的代码复制过来直接调用啦！😊😊😊😊😊😊😊
+
+![image.png](https://pic.leetcode-cn.com/1632529084-InRQXY-image.png)
+
+---
+
+### 代码：
+
+* c++
+
+```c++
+class Solution {
+public:
+    int longestCommonSubsequence(string text1, string text2) {
+        // 从题库直接复制过来的LCS模板
+        int m = text1.length(), n = text2.length();
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1));
+        for (int i = 1; i <= m; i++) {
+            char c1 = text1.at(i - 1);
+            for (int j = 1; j <= n; j++) {
+                char c2 = text2.at(j - 1);
+                if (c1 == c2) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+
+    int minDistance(string a, string b) {
+        int n = a.size(), m = b.size();
+        
+        int LCS = longestCommonSubsequence(a, b);
+
+        return n + m - 2 * LCS;
+    }
+};
+```
+
+---
+
+### 复杂度分析：
+
+- 时间复杂度：$O(nm)$
+- 空间复杂度：$O(nm)$
+

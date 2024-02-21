@@ -1,0 +1,55 @@
+### 解题思路
+
+此处撰写解题思路
+
+### 代码
+
+* javascript
+
+```javascript
+/**
+ * @param {number[]} coins
+ * @param {number} amount
+ * @return {number}
+ */
+// 记忆查询法，由于是自顶向下，会碰到数据仍未infinity的情况，需要去递归
+// var coinChange = function(coins, amount) {
+//     if(amount === 0) return 0
+//     let F = new Array(amount+1).fill(Infinity)
+//     F[0] = 0
+//     function coinFind(amount){
+//         let sub = []
+//         for(let i in coins){
+//             if(amount-coins[i] >= 0){
+//                 if(F[amount-coins[i]] === Infinity){
+//                     let ret = coinFind(amount-coins[i])
+//                     if(ret !== -1){
+//                         sub.push(ret+1)
+//                     }
+//                 }else{
+//                     if(F[amount-coins[i]] >= 0 ){
+//                         sub.push(F[amount-coins[i]] + 1)
+//                     } 
+//                 }
+//             }
+//         }
+//         F[amount] =sub.length ? Math.min(...sub) : -1
+//         return F[amount]
+//     }
+//     return coinFind(amount) === Infinity ? -1 : coinFind(amount)
+// };
+
+// 自底向上，动态规划方法
+var coinChange = function(coins, amount) {
+    if(amount === 0) return 0
+    var F = new Array(amount+1).fill(Infinity)
+    F[0] = 0
+    for(let i = 1 ; i <= amount ; i++ ){
+        for(let n in coins){
+            coins[n] <= i &&  ( F[i] = Math.min(F[i] , F[i-coins[n]]+1) )
+        }
+    }
+    return F[amount] === Infinity ? -1 : F[amount]
+};
+```
+

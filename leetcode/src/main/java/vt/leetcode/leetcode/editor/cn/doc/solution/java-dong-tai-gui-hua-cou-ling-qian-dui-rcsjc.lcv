@@ -1,0 +1,68 @@
+### 解题思路
+
+...一把过，本菜狗也太可怕了！
+动态规划思路，dp数组，数组下标为要凑的金额，值为凑齐这个金额所需要的最少张数。
+每个位置的最优解需要遍历当前要凑的金额对所有给定的金额的差值的最优解，比如给你1,3,5三种金额，然后咱们现在凑到了100（即dp[i],i=100）
+需要分别找100-1,100-3,100-5的值上，哪个是最少的。
+
+后面就是对-1的处理了，细心一定可以。
+
+### 代码
+
+* java
+
+```java
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        // nil judge
+        if (coins == null || coins.length == 0 || amount <= 0) {
+            return 0;
+        }
+        Arrays.sort(coins);
+        int[] dp = new int[amount + 1];
+        dp[0] = 0;
+        // init dp[amount+1]; values 4 the most min numbers,first 0,index is the numer
+        // for i in dp; i就是这次要凑的值
+        for (int i = 1; i < dp.length; i ++) {
+            // dp[j] = 解果
+                int ak = -1;
+                for (int j = 0; j < coins.length; j ++) {
+                    if (coins[j] > i) {
+                        // 大于则放弃
+                        break;
+                    } else if (coins[j] == i) {
+                        // 如果m吻合当前i则直接赋值1
+                        ak = 1;
+                        break;
+                    } else {
+                        // coins[j] < i
+                        // m面额小于当前要凑的i;赋值dp[i-面额m]
+                        //比如当前位置7,当前面额4,那就去找7-4的dp
+                        int gap = i - coins[j];
+                        // 找最小值
+                        if (dp[gap]  == -1) {
+                            // 当前位置凑不出
+                            continue;
+                        } 
+                        if (ak == -1) {
+                            ak = dp[gap] + 1;
+                        } else {
+                            // ak != -1 && dp.gap != -1
+                            ak = Math.min(ak, dp[gap] + 1);
+                        }
+                    }
+                }
+                dp[i] = ak;
+                // for m in  coins
+                    // 如果m吻合当前i则直接赋值1
+                    // m面额小于当前要凑的i;赋值dp[i-面额m]
+                    // 大于则放弃
+                //
+            // if j >= i j = amount - coin[j],
+        }
+
+        return dp[amount];
+    }
+}
+```
+
